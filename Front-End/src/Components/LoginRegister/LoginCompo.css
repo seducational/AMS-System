@@ -1,0 +1,78 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* optional if horizontal scroll appears */
+  }
+
+.login-container {
+  overflow: hidden;
+  height: 100vh;
+  }
+  
+  .login-row {
+    height: 100%;
+  }
+  
+  .login-left {
+    background-color: #fff; 
+  }
+  
+  .login-left-image {
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+    background-image: url('../../assets/Loginleft.jpg');
+    background-size: cover;
+  }
+  
+  .login-right {
+    background-color: #f7f7f7;
+    
+  }
+  
+  .login-card {
+    overflow: hidden;
+    width: 100%;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    /* border-radius: 39px; */
+  }
+
+  .login-card .form-control{
+    border-radius: 4px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-left: 4px solid #007bff;
+    outline: none;
+    box-shadow: none;
+    background-color: #e8f0fe;
+  }
+  
+  .show-password .cursor-pointer{
+    cursor: pointer;
+  }
+  .login-footer{
+    font-size: 13px;
+    font-weight: 700;
+    color: black;
+  }
+  
+  
+  .forgot-password-link,
+  .privacy-policy-link {
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  /* This hides the browser's built-in eye icon in Edge/Chrome */
+  input[type="password"]::-ms-reveal {
+    display: none;
+  }
+  input[type="password"] {
+    appearance: none;
+  }
+
+  .custom-placeholder::placeholder {
+    color: #9a9ca1; /* Change this to any color you like */
+    opacity: 1; /* Optional: ensures full visibility */
+  }
