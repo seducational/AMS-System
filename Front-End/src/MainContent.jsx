@@ -7,7 +7,7 @@ import LoginComponent from "./Components/LoginRegister/LoginComponent";
 import RegisterComponent from "./Components/LoginRegister/RegisterCompo";
 import PatientDataComponent from "./Components/COT/PatientDataComponent";
 import ForgotPasswordForm from "./Components/LoginRegister/ForgotPasswordForm";
-import Chatbox from "./Components/Chatbox/Chatbox";
+import ChatBoxComponent from "./Components/Chatbox/Chatbox1";
 
 const MainContent = () => {
   // const navigate = useNavigate();
@@ -39,7 +39,7 @@ const MainContent = () => {
         <Route path="/register" element={<RegisterComponent />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/patient-data" element={<PatientDataComponent />} />
-        <Route path="/chatbox" element={<Chatbox />} />
+        <Route path="/chatbox" element={<ChatBoxComponent />} />
       </Routes>
 
       {/* COT tabs content */}

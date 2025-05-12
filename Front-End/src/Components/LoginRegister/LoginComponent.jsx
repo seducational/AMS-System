@@ -10,7 +10,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { handleLoginfisrt } = useAuth();
+  const { handleLoginfirst } = useAuth();
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);
     setemail(""); // Jab role change ho toh input reset
@@ -29,7 +29,7 @@ const LoginForm = () => {
       .then((response) => {
         console.log("Login Success:", response.data); // Response log to check the data received
         alert("Login successful!");
-        navigate("/patient-data"); // Redirect to patient data page after successful login
+        // navigate("/patient-data"); // Redirect to patient data page after successful login
       })
       .catch((error) => {
         if (error.response) {
@@ -125,7 +125,7 @@ const LoginForm = () => {
               className="w-100 mt-2"
               style={{ backgroundColor: "#5e5eff", borderRadius: "8px" }}
               onClick={(e) => {
-                handleLoginfisrt(selectedRole); // pass the selected role
+                handleLoginfirst(selectedRole); // pass the selected role
               }
             }
             >

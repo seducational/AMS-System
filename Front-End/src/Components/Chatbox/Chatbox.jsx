@@ -13,10 +13,12 @@ import {
 import io from "socket.io-client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Chatbox.css"; // External CSS for animations
+import { useAuth } from '../../AuthContext'; 
 
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:8000/");
 
-const Chatbox = ({ user }) => {
+const Chatbox = () => {
+  const { user } = useAuth(); // includes _id, name, role
   const [messages, setMessages] = useState([]);
   const [newMsg, setNewMsg] = useState("");
   const [typingStatus, setTypingStatus] = useState("");

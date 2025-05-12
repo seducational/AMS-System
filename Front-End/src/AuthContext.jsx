@@ -1,36 +1,39 @@
 import React, { createContext, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
-
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [activeTab, setActiveTab] = useState('Patient Data');
+  const navigate = useNavigate();
 
-  const handleLoginfisrt = (role) => {
+  const handleLoginfirst = (role) => {
     setIsLoggedIn(true);
     setUserRole(role);
-    setActiveTab('Patient Data');
+    setActiveTab('Patient Data'); 
+    if (role === 'user') {
+      navigate('/patient-data'); // Redirect to the main page for cot users
+    }
+    // else if (role === 'doctor') {
+    //   setActiveTab('Patient Data'); // Default tab for user
+    // }
+    // else if (role === 'admin') {
+    //   setActiveTab('Patient Data'); // Default tab for admin
+    // }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserRole('');
-    navigate('/login');
+    navigate('/'); // Redirect to the home page after logout
   };
 
-  const login = async (email, password) => {
-    if (email === "cot@example.com" && password === "1234") {
-      setIsLoggedIn(true);
-      setUserRole("cot");
-      return true;
-    }
-    return false;
-  };
+  
   
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userRole, activeTab, handleLoginfisrt, handleLogout, setActiveTab, login }}>
+    <AuthContext.Provider value={{ isLoggedIn, userRole, activeTab, handleLoginfirst, handleLogout, setActiveTab}}>
       {children}
     </AuthContext.Provider>
   );
