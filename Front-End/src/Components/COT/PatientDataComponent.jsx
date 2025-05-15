@@ -1,7 +1,8 @@
 import React from 'react';
 import { Table, Button, DropdownButton, Dropdown, Container, Row, Col, Image } from 'react-bootstrap';
 import { FaStar, FaUserPlus } from 'react-icons/fa';
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const patientData = [
   { id: 'P001', name: 'John Doe', age: 32, genderImg: 'https://randomuser.me/api/portraits/men/1.jpg', status: 'active' },
   { id: 'P002', name: 'Jane Smith', age: 28, genderImg: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'inactive' },
@@ -14,6 +15,7 @@ const patientData = [
 
 const PatientDataComponent = () => {
   return (
+    
     <Container className="my-4">
       <Row className="ms-auto mb-3 w-25">
         <Button variant="primary" className="d-flex justify-content-center align-items-center gap-2">
@@ -61,6 +63,7 @@ const PatientDataComponent = () => {
           ))}
         </tbody>
       </Table>
+      <ToastContainer />
     </Container>
   );
 };
