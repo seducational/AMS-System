@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button, DropdownButton, Dropdown, Container, Row, Col, Image } from 'react-bootstrap';
 import { FaStar, FaUserPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const patientData = [
   { id: 'P001', name: 'John Doe', age: 32, genderImg: 'https://randomuser.me/api/portraits/men/1.jpg', status: 'active' },
@@ -13,10 +14,11 @@ const patientData = [
 ];
 
 const PatientDataComponent = () => {
+  const Navigate = useNavigate();
   return (
     <Container className="my-4">
       <Row className="ms-auto mb-3 w-25">
-        <Button variant="primary" className="d-flex justify-content-center align-items-center gap-2">
+        <Button variant="primary" className="d-flex justify-content-center align-items-center gap-2" onClick={() => Navigate('/form')}>
           <FaUserPlus />
           Add Patient
         </Button>

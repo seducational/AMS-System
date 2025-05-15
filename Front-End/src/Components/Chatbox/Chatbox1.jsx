@@ -1,21 +1,47 @@
 // client/src/App.js
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import './Chatbox1.css';
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
+import "./Chatbox1.css";
+import axios from "axios";
 
-const socket = io('http://localhost:8000');
+const socket = io("http://localhost:8000");
 
 function ChatBoxComponent() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(null);
   const [joined, setJoined] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [users, setUsers] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [activeChatUser, setActiveChatUser] = useState(null);
 
   useEffect(() => {
-    socket.on('message', (payload) => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get("http://localhost:8000/auth/me", {
+          headers: {
+            'x-auth-token': token, 
+          },
+        });
+        console.log("Token:", token);
+
+        setUsername(response.data.name);
+        socket.emit("join", response.data.name);
+        setJoined(true);
+      } catch (error) {
+        console.error(
+          "Error fetching user:",
+          error.response?.data?.message || error.message
+        );
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    socket.on("message", (payload) => {
       setChat((prevChat) => [...prevChat, payload]);
 
       if (payload.user !== username && payload.user !== activeChatUser) {
@@ -26,21 +52,21 @@ function ChatBoxComponent() {
       }
     });
 
-    socket.on('userList', (userList) => {
+    socket.on("userList", (userList) => {
       setUsers(userList);
     });
 
-    socket.on('userConnected', (username) => {
+    socket.on("userConnected", (username) => {
       setChat((prevChat) => [
         ...prevChat,
-        { user: 'System', text: `${username} has joined the chat` },
+        { user: "System", text: `${username} has joined the chat` },
       ]);
     });
 
-    socket.on('userDisconnected', (username) => {
+    socket.on("userDisconnected", (username) => {
       setChat((prevChat) => [
         ...prevChat,
-        { user: 'System', text: `${username} has left the chat` },
+        { user: "System", text: `${username} has left the chat` },
       ]);
     });
 
@@ -51,7 +77,7 @@ function ChatBoxComponent() {
 
   const handleJoin = () => {
     if (username.trim()) {
-      socket.emit('join', username);
+      socket.emit("join", username);
       setJoined(true);
     }
   };
@@ -59,8 +85,8 @@ function ChatBoxComponent() {
   const sendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      socket.emit('message', message);
-      setMessage('');
+      socket.emit("message", message);
+      setMessage("");
     }
   };
 
@@ -70,25 +96,18 @@ function ChatBoxComponent() {
   };
 
   const filteredChat = activeChatUser
-    ? chat.filter((msg) => msg.user === activeChatUser || msg.user === username || msg.user === 'System')
+    ? chat.filter(
+        (msg) =>
+          msg.user === activeChatUser ||
+          msg.user === username ||
+          msg.user === "System"
+      )
     : chat;
 
-  if (!joined) {
+  if (!joined)
     return (
-      <div className="login-screen">
-        <div className="login-box">
-          <h2>Join Chat</h2>
-          <input
-            type="text"
-            placeholder="Enter your name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button onClick={handleJoin}>Join</button>
-        </div>
-      </div>
+      <div className="spinner-border " role="status"></div>
     );
-  }
 
   return (
     <div className="main-chat-container">
@@ -100,7 +119,7 @@ function ChatBoxComponent() {
             .map((user, idx) => (
               <li
                 key={idx}
-                className={user === activeChatUser ? 'active-user' : ''}
+                className={user === activeChatUser ? "active-user" : ""}
                 onClick={() => handleUserClick(user)}
               >
                 {user}
@@ -113,13 +132,17 @@ function ChatBoxComponent() {
       </div>
       <div className="chat-area">
         <div className="chat-header">
-          <h3>{activeChatUser ? `Chat with ${activeChatUser}` : 'Public Chat Room'}</h3>
+          <h3>
+            {activeChatUser
+              ? `Chat with ${activeChatUser}`
+              : "Public Chat Room"}
+          </h3>
         </div>
         <div className="chat-messages">
           {filteredChat.map((msg, idx) => (
             <div
               key={idx}
-              className={`message ${msg.user === username ? 'own' : ''}`}
+              className={`message ${msg.user === username ? "own" : ""}`}
             >
               <strong>{msg.user}:</strong> {msg.text}
             </div>

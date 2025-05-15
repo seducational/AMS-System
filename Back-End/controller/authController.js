@@ -133,3 +133,18 @@ exports.resetPasswordWithOtp = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+  // Get User Profile
+  exports.getLoggedInUserName = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('fullName');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json({ name: user.fullName });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+  

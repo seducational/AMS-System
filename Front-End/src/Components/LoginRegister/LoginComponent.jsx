@@ -1,48 +1,10 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
 const LoginForm = () => {
-  const [selectedRole, setSelectedRole] = useState("admin");
-  const [email, setemail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  const { handleLoginfirst } = useAuth();
-  const handleRoleChange = (e) => {
-    setSelectedRole(e.target.value);
-    setemail(""); // Jab role change ho toh input reset
-    setPassword("");
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    let payload = { email, password, userType: selectedRole };
-
-    console.log("Login Payload:", payload);
-
-    axios
-      .post("http://localhost:8000/auth/login", payload)
-      .then((response) => {
-        console.log("Login Success:", response.data); // Response log to check the data received
-        alert("Login successful!");
-        // navigate("/patient-data"); // Redirect to patient data page after successful login
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error("Login Error Response:", error.response); // Log the full error response
-          alert(
-            `Error: ${error.response.data.message || "Invalid credentials"}`
-          ); // More specific error message
-        } else {
-          console.error("Login Error:", error.message);
-          alert("An error occurred. Please try again later.");
-        }
-      });
-  };
+  const { handleLogin,handleRoleChange,selectedRole,email,password,setemail,setPassword } = useAuth();
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100 bg-light">
@@ -125,7 +87,7 @@ const LoginForm = () => {
               className="w-100 mt-2"
               style={{ backgroundColor: "#5e5eff", borderRadius: "8px" }}
               onClick={(e) => {
-                handleLoginfirst(selectedRole); // pass the selected role
+                handleLogin(selectedRole); // pass the selected role
               }
             }
             >

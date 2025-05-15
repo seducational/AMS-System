@@ -8,26 +8,9 @@ import RegisterComponent from "./Components/LoginRegister/RegisterCompo";
 import PatientDataComponent from "./Components/COT/PatientDataComponent";
 import ForgotPasswordForm from "./Components/LoginRegister/ForgotPasswordForm";
 import ChatBoxComponent from "./Components/Chatbox/Chatbox1";
+import AuditForm from "./Components/COT/Auditform";
 
 const MainContent = () => {
-  // const navigate = useNavigate();
-  // const { isLoggedIn, userRole, activeTab } = useAuth();
-
-  // const renderTabComponent = () => {
-  //   if (userRole === "cot") {
-  //     switch (activeTab) {
-  //       case "Patient Data":
-  //         return <PatientDataComponent/>;      //<PatientData />
-  //       case "Team Chat":
-  //         return "Hello Team"; //<TeamChat />;
-  //       case "Notifications":
-  //         return "Hello Notofication"; //<Notifications />;
-  //       default:
-  //         return null;
-  //     }
-  //   }
-  //   return null;
-  // };
 
   return (
     <>
@@ -38,12 +21,10 @@ const MainContent = () => {
         {/* <Route path="/login" element={isLoggedIn ? navigate(<PatientDataComponent/>) : <LoginComponent />} /> */}
         <Route path="/register" element={<RegisterComponent />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-        <Route path="/patient-data" element={<PatientDataComponent />} />
+        <Route path="/patientData" element={<PatientDataComponent />} />
         <Route path="/chatbox" element={<ChatBoxComponent />} />
+        <Route path="/form" element={<AuditForm />} />
       </Routes>
-
-      {/* COT tabs content */}
-      {/* {isLoggedIn && userRole === "cot" && renderTabComponent()} */}
     </>
   );
 };

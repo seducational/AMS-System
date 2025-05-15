@@ -16,7 +16,7 @@ import "./Navbar.css";
 import { useAuth } from "../../AuthContext";
 
 const AppNavbar = () => {
-  const { isLoggedIn, userRole, activeTab, setActiveTab, handleLogout } =
+  const { isLoggedIn, selectedRole, activeTab, setActiveTab, handleLogout } =
     useAuth();
   const navigate = useNavigate();
   const cotTabs = ["Patient Data", "Team Chat", "Notifications"];
@@ -36,7 +36,7 @@ const AppNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             {/* Show COT tabs only after login */}
-            {isLoggedIn && userRole === "user" && (
+            {isLoggedIn && selectedRole === "user" && (
               <Nav className="me-auto ms-4">
                 {cotTabs.map((tab) => (
                   <Nav.Link
@@ -44,7 +44,7 @@ const AppNavbar = () => {
                     onClick={() => {
                       setActiveTab(tab);
                       if (tab === "Patient Data") {
-                        navigate("/patient-data");
+                        navigate("/patientData");
                       } else if (tab === "Team Chat") {
                         navigate("/chatbox");
                       } else if (tab === "Notifications") {
@@ -84,7 +84,7 @@ const AppNavbar = () => {
           </Navbar.Collapse>
 
           {/* Right side buttons */}
-          {isLoggedIn && userRole === "user"? (
+          {isLoggedIn && selectedRole === "user"? (
             <Dropdown align="end" className="ms-2">
               <Dropdown.Toggle
                 variant="light"
