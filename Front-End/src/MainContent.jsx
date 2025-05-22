@@ -8,7 +8,6 @@ import RegisterComponent from "./Components/LoginRegister/RegisterCompo";
 import PatientDataComponent from "./Components/COT/PatientDataComponent";
 import ForgotPasswordForm from "./Components/LoginRegister/ForgotPasswordForm";
 import ChatBoxComponent from "./Components/Chatbox/Chatbox1";
-import AuditForm from "./Components/COT/Auditform";
 
 const MainContent = () => {
 
@@ -23,7 +22,6 @@ const MainContent = () => {
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/patientData" element={<PatientDataComponent />} />
         <Route path="/chatbox" element={<ChatBoxComponent />} />
-        <Route path="/form" element={<AuditForm />} />
       </Routes>
     </>
   );
