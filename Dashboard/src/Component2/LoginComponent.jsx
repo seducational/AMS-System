@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from '../AuthContext'
 
 const LoginForm = () => {
   const { handleLogin,handleRoleChange,selectedRole,email,password,setemail,setPassword } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Container className="d-flex justify-content-center align-items-center mt-3">
-      <Row className="w-100 justify-content-center">
+    <Container className="d-flex justify-content-center align-items-center ">
+      <Row className="w-100  justify-content-center mt-5 ">
         <Col md={8} lg={4} className="bg-white p-4 rounded shadow">
           <h1 className="text-center text-primary mb-4">Login</h1>
           <Form onSubmit={handleLogin}>
             <Form.Group controlId="formBasicRole">
-              <Form.Label>Select Role</Form.Label>
+              {/* <Form.Label>Select Role</Form.Label> */}
               <div className="d-flex gap-3 flex-wrap">
                 <Form.Check
                   type="radio"
@@ -25,7 +25,7 @@ const LoginForm = () => {
                   onChange={handleRoleChange}
                   checked={selectedRole === 'admin'}
                 />
-                <Form.Check
+                {/* <Form.Check
                   type="radio"
                   label="User"
                   name="role"
@@ -42,7 +42,7 @@ const LoginForm = () => {
                   value="doctor"
                   onChange={handleRoleChange}
                   checked={selectedRole === 'doctor'}
-                />
+                /> */}
               </div>
             </Form.Group>
 
@@ -88,7 +88,7 @@ const LoginForm = () => {
       color: '#aaa',
     }}
   >
-    {showPassword ? '👁️' : '🙈'} {/* Simple emoji icons for demo */}
+    {showPassword ? '🙉' : '🙈'} {/* Simple emoji icons for demo */}
   </span>
 </Form.Group>
 

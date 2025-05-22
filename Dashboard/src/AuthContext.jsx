@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         localStorage.setItem("authToken", response.data.token);
         setActiveTab('Patient Data'); 
-        if (selectedRole === 'user') {
-          navigate('/patientData'); // Redirect to the main page for cot users
+        if (selectedRole === 'admin') {
+          navigate('/dashboard'); // Redirect to the main page for cot users
         }
         // else if (role === 'doctor') {
         //   setActiveTab('Patient Data'); // Default tab for user

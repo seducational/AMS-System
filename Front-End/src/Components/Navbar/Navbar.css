@@ -6,7 +6,7 @@
 .icon-rounded {
     border-radius: 40px !important;
     padding: 0px !important;
-    width: 65px;
+    min-width: 9rem;
     height: 40px;
     padding: 3px !important;
   }

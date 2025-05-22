@@ -1,7 +1,7 @@
 import { PersonCircle, BoxArrowRight } from "react-bootstrap-icons";
 import { LuShipWheel } from "react-icons/lu";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Nav,
@@ -14,12 +14,44 @@ import { NavLink, useNavigate, Outlet } from "react-router-dom";
 import { IoLogInOutline } from "react-icons/io5";
 import "./Navbar.css";
 import { useAuth } from "../../AuthContext";
+import axios from "axios";
 
 const AppNavbar = () => {
-  const { isLoggedIn, userRole, activeTab, setActiveTab, handleLogout } =
+  const [username, setUsername] = useState("");
+
+  const { isLoggedIn, selectedRole, activeTab, setActiveTab, handleLogout } =
     useAuth();
   const navigate = useNavigate();
   const cotTabs = ["Patient Data", "Team Chat", "Notifications"];
+  const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get("http://localhost:8000/auth/me", {
+          headers: {
+            "x-auth-token": token,
+          },
+        });
+    
+        const { firstName, middleName, lastName } = response.data;
+        const middleInitial = middleName ? `${middleName[0]}.` : "";
+        const fullName = `${firstName} ${middleInitial} ${lastName}`;
+        setFullName(fullName.trim());
+      } catch (error) {
+        console.error(
+          "Error fetching user:",
+          error.response?.data?.message || error.message
+        );
+      }
+    };
+    
+
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -36,7 +68,7 @@ const AppNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             {/* Show COT tabs only after login */}
-            {isLoggedIn && userRole === "user" && (
+            {isLoggedIn && selectedRole === "user" && (
               <Nav className="me-auto ms-4">
                 {cotTabs.map((tab) => (
                   <Nav.Link
@@ -44,7 +76,7 @@ const AppNavbar = () => {
                     onClick={() => {
                       setActiveTab(tab);
                       if (tab === "Patient Data") {
-                        navigate("/patient-data");
+                        navigate("/patientData");
                       } else if (tab === "Team Chat") {
                         navigate("/chatbox");
                       } else if (tab === "Notifications") {
@@ -84,14 +116,14 @@ const AppNavbar = () => {
           </Navbar.Collapse>
 
           {/* Right side buttons */}
-          {isLoggedIn && userRole === "user"? (
+          {isLoggedIn && selectedRole === "user"? (
             <Dropdown align="end" className="ms-2">
               <Dropdown.Toggle
                 variant="light"
                 id="dropdown-basic"
                 className="d-flex align-items-center icon-rounded text-secondary border-0"
               >
-                <PersonCircle size={35} className="me-1" />
+               <span className="me-"> <PersonCircle size={35} className="me-1" /><span className="fw-bold">Hello!</span> {fullName}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item href="#setup">
@@ -125,6 +157,8 @@ const AppNavbar = () => {
               </NavLink>
             </div>
           )}
+
+
         </Container>
       </Navbar>
       <Outlet />
