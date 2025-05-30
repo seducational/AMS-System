@@ -7,9 +7,9 @@ const patientDataSchema = new mongoose.Schema({
     Sex : {type : String},
     Indication : {type : String},
     Diagnosis : {type : String},
-    Past_History : {type : Boolean},
+    Past_History : {type : String},   //type channges boolean to string
     Co_morbidities : {type : String},
-    Empirical_Therapy : {type : Boolean},
+    Empirical_Therapy : {type : String},  //type channges boolean to string
     Antibiotic_name : {type : String},
     Dose : {type : String},
     Route : {type : String},
@@ -21,20 +21,21 @@ const patientDataSchema = new mongoose.Schema({
     Specimen : {type : String},
 
     //Second Page
-    Antibiotic_change_afer_culture : {type : Boolean},
+    Antibiotic_change_afer_culture : {type : String},          //Changed to String from Boolean
     Antibiotic_name1 : {type : String},
     Dose1 : {type : String},
     Route1 : {type : String},
     Frequency1 : {type : String},
     Antibiotic_review : {type : String},
-    De_escalation : {type : Boolean},
-    Is_Antibiotic_reserved : {type : Boolean},
-    Reserve_drug_policy_followed : {type : Boolean},
-    Selection_as_per_policy : {type : Boolean},
+    De_escalation : {type : String},          //Changed to String from Boolean
+    Is_Antibiotic_reserved : {type : String},          //Changed to String from Boolean
+    Reserve_drug_policy_followed : {type : String},          //Changed to String from Boolean
+    Selection_as_per_policy : {type : String},          //Changed to String from Boolean
     Policy_compliance : {type : String},
     MDRO : {type : String},
     VRE : {type : String},
     MRSA : {type : String},
+    Remarks: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('PatientData', patientDataSchema);

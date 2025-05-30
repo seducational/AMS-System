@@ -1,16 +1,30 @@
 // AuditFormPage1.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 
-const AuditFormPage1 = ({ formData, handleChange }) => {
+const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
   // State to manage the past history field
   const [pastHistory, setPastHistory] = useState("");
 
-  // State to manage the date fields
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  // Sync local state with formData on mount or update
+  useEffect(() => {
+    setPastHistory(formData.Past_History || ""); // Note the capital 'P' to match the field name
+  }, [formData.Past_History]);
 
-  // Function to handle date changes
+  
+  const [startDate, setStartDate] = useState(formData.Started_Date || "");
+  const [endDate, setEndDate] = useState(formData.End_Date || "");
+  
+  useEffect(() => {
+  const duration = calculateDuration();
+  setFormData((prevData) => ({
+    ...prevData,
+    Started_Date: startDate,
+    End_Date: endDate,
+    Duration: duration,
+  }));
+}, [startDate, endDate]);
+
   const calculateDuration = () => {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -20,6 +34,13 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
       return diffDays >= 0 ? diffDays : 0;
     }
     return "";
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    if (isNaN(date)) return "";
+    return date.toISOString().split("T")[0];
   };
 
   return (
@@ -40,8 +61,8 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
             <Form.Label>Age</Form.Label>
             <Form.Control
               type="text"
-              value={formData.age || ""}
-              onChange={(e) => handleChange("age", e.target.value)}
+              value={formData.Age || ""}
+              onChange={(e) => handleChange("Age", Number(e.target.value))}
             />
           </Form.Group>
         </Col>
@@ -54,9 +75,9 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
               onChange={(e) => handleChange("Sex", e.target.value)}
             >
               <option className="text-secondary">Select-</option>
-              <option className="text-secondary">Male</option>
-              <option className="text-secondary">Female</option>
-              <option className="text-secondary">Others</option>
+              <option className="text-dark">Male</option>
+              <option className="text-dark">Female</option>
+              <option className="text-dark">Others</option>
             </Form.Control>
           </Form.Group>
         </Col>
@@ -91,8 +112,12 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
             <Form.Label>Past History</Form.Label>
             <Form.Control
               as="select"
-              value={pastHistory}
-              onChange={(e) => setPastHistory(e.target.value)}
+              value={formData.Past_History || ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                handleChange("Past_History", value);
+                setPastHistory(value); // Keep local state in sync
+              }}
             >
               <option value="">Select-</option>
               <option value="Yes">Yes</option>
@@ -100,11 +125,14 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
             </Form.Control>
           </Form.Group>
         </Col>
+
         <Col md={8}>
           <Form.Group className="mt-3">
             <Form.Label>Co-morbidities</Form.Label>
             <Form.Control
               type="text"
+              value={formData.Co_morbidities || ""}
+              onChange={(e) => handleChange("Co_morbidities", e.target.value)}
               disabled={pastHistory === "No"}
               placeholder={pastHistory === "No" ? "Disabled" : "Enter details"}
             />
@@ -123,8 +151,15 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
                 handleChange("Empirical_Therapy", e.target.value)
               }
             >
-              <option className="text-secondary">Yes</option>
-              <option className="text-secondary">No</option>
+              <option value="" className="text-secondary">
+                Select-
+              </option>
+              <option value="Yes" className="text-dark">
+                Yes
+              </option>
+              <option value="No" className="text-dark">
+                No
+              </option>
             </Form.Control>
           </Form.Group>
         </Col>
@@ -176,32 +211,37 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
       {/* Date fields for start and end date */}
       <Row className="mt-3">
         <Col md={6}>
-          <Form.Group>
+          <Form.Group className="mt-3">
             <Form.Label>Started on</Form.Label>
             <Form.Control
               type="date"
-              value={startDate}
+              value={startDate || ""}
               onChange={(e) => {
-                setStartDate(e.target.value);
-                if (new Date(e.target.value) > new Date(endDate)) {
-                  setEndDate(""); // Reset if endDate becomes invalid
-                }
+                const value = e.target.value;
+                setStartDate(value);
               }}
             />
           </Form.Group>
         </Col>
+
         <Col md={6}>
-          <Form.Group>
+          <Form.Group className="mt-3">
             <Form.Label>Last Dose Date</Form.Label>
             <Form.Control
               type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              min={startDate} // Restricts selection before startDate
-              disabled={!startDate} // Prevents picking end date before start date is chosen
+              value={endDate || ""}
+              min={startDate}
+              disabled={!startDate}
+              onChange={(e) => {
+                const value = e.target.value;
+                setEndDate(value);
+                handleChange("End_Date", value);
+                handleChange("Duration", calculateDuration());
+              }}
             />
           </Form.Group>
         </Col>
+
         <Col xs={12} className="d-flex justify-content-end mt-2">
           <strong>Days Duration: {calculateDuration()}</strong>
         </Col>
@@ -213,9 +253,18 @@ const AuditFormPage1 = ({ formData, handleChange }) => {
             <Form.Label>Culture sent before starting (Y/N)</Form.Label>
             <Form.Control
               as="select"
-              value={formData.Culture_sent_before_start || ""}
+              value={
+                formData.Culture_sent_before_start === true
+                  ? "Yes"
+                  : formData.Culture_sent_before_start === false
+                  ? "No"
+                  : ""
+              }
               onChange={(e) =>
-                handleChange("Culture_sent_before_start", e.target.value)
+                handleChange(
+                  "Culture_sent_before_start",
+                  e.target.value === "Yes"
+                )
               }
             >
               <option className="text-secondary">Select-</option>

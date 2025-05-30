@@ -4,7 +4,7 @@ const User = require('../model/authModel');
 
 // Register Controller
 exports.register = async (req, res) => {
-    const { fullName, email, password, userType } = req.body;
+    const { firstName,middleName,lastName, email, password, userType } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -16,7 +16,9 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         user = new User({
-            fullName,
+            firstName,
+            middleName,
+            lastName,
             email,
             password: hashedPassword,
             userType
@@ -137,14 +139,32 @@ exports.resetPasswordWithOtp = async (req, res) => {
   // Get User Profile
   exports.getLoggedInUserName = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select('fullName');
+        const user = await User.findById(req.userId).select('firstName middleName lastName');
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        res.status(200).json({ name: user.fullName });
+        res.status(200).json({    
+           firstName: user.firstName,
+          middleName: user.middleName,
+          lastName: user.lastName, });
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
     }
 };
 
+//get doctor and cot team count
+exports.getUserCounts = async (req, res) => {
+  try {
+    // Role wise count nikal rahe hain
+    const doctorsCount = await User.countDocuments({ userType: 'doctor' });
+    const cotTeamCount = await User.countDocuments({ userType: 'user' }); // assuming 'user' is COT team
+
+    res.status(200).json({
+      doctorsCount,
+      cotTeamCount
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching counts', error });
+  }
+};
   

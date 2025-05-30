@@ -15,4 +15,6 @@ router.post('/reset-password', authController.resetPasswordWithOtp);
 
 router.get('/me', authMiddleware, authController.getLoggedInUserName);
 
+router.get('/dashboard-counts', authController.getUserCounts);
+
 module.exports = router;

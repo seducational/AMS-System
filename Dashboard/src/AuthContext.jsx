@@ -42,11 +42,14 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         localStorage.setItem("authToken", response.data.token);
         setActiveTab('Patient Data'); 
-        if (selectedRole === 'user') {
-          navigate('/patientData'); // Redirect to the main page for cot users
+        if (selectedRole === 'admin') {
+          navigate('/dashboard'); // Redirect to the main page for cot users
         }
         // else if (role === 'doctor') {
         //   setActiveTab('Patient Data'); // Default tab for user
+        // }
+        // else if (role === 'admin') {
+        //   setActiveTab('Patient Data'); // Default tab for admin
         // }
       })
       .catch((error) => {
@@ -61,6 +64,20 @@ export const AuthProvider = ({ children }) => {
         }
       });
   };
+  // const handleLoginfirst = (role) => {
+  //   setIsLoggedIn(true);
+  //   setUserRole(role);
+  //   setActiveTab('Patient Data'); 
+  //   if (role === 'user') {
+  //     navigate('/patient-data'); // Redirect to the main page for cot users
+  //   }
+  //   // else if (role === 'doctor') {
+  //   //   setActiveTab('Patient Data'); // Default tab for user
+  //   // }
+  //   // else if (role === 'admin') {
+  //   //   setActiveTab('Patient Data'); // Default tab for admin
+  //   // }
+  // };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
