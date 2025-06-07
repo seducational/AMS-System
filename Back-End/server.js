@@ -16,10 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
@@ -36,6 +33,8 @@ app.use('/notify',notificationRoutes)
 const accountRequestRoutes = require('./route/accountRequestRoutes');
 app.use('/request', accountRequestRoutes);
 
+const patientDataRoutes = require('./route/PatientDataRoute');
+app.use('/patient', patientDataRoutes);
 // Socket
 // Create HTTP server
 

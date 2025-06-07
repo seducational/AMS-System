@@ -48,9 +48,6 @@ export const AuthProvider = ({ children }) => {
         // else if (role === 'doctor') {
         //   setActiveTab('Patient Data'); // Default tab for user
         // }
-        // else if (role === 'admin') {
-        //   setActiveTab('Patient Data'); // Default tab for admin
-        // }
       })
       .catch((error) => {
         if (error.response) {
@@ -64,20 +61,6 @@ export const AuthProvider = ({ children }) => {
         }
       });
   };
-  // const handleLoginfirst = (role) => {
-  //   setIsLoggedIn(true);
-  //   setUserRole(role);
-  //   setActiveTab('Patient Data'); 
-  //   if (role === 'user') {
-  //     navigate('/patient-data'); // Redirect to the main page for cot users
-  //   }
-  //   // else if (role === 'doctor') {
-  //   //   setActiveTab('Patient Data'); // Default tab for user
-  //   // }
-  //   // else if (role === 'admin') {
-  //   //   setActiveTab('Patient Data'); // Default tab for admin
-  //   // }
-  // };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
