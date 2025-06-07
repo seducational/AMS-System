@@ -10,7 +10,7 @@ import { GiConfirmed } from "react-icons/gi";
 import { LuCalendarCheck } from "react-icons/lu";
 import { PiImageSquare } from "react-icons/pi";
 import { IoIosArrowDropdown } from "react-icons/io";
-
+import { FcPlus } from "react-icons/fc";
 import profile from "../assets/adminProfile.webp"
 import './Sidebar.css';
 import { useAuth } from "../AuthContext";
@@ -111,6 +111,9 @@ const Sidebar = () => {
           )}
         </div>
 
+        <Link to="/patientTable" className="Sidebar-menu" onClick={closeSidebar}>
+        <FcPlus className="me-3 fs-5 " />Patient Data
+        </Link>
         <Link to="/chatbox" className="Sidebar-menu" onClick={closeSidebar}>
           <AiOutlineCalendar className="me-3 fs-5 text-success" /> Chat Box
         </Link>

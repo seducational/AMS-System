@@ -7,7 +7,8 @@ import RegisterComponent from "./Components/LoginRegister/RegisterCompo";
 import PatientDataComponent from "./Components/COT/PatientDataComponent";
 import ForgotPasswordForm from "./Components/LoginRegister/ForgotPasswordForm";
 import ChatBoxComponent from "./Components/Chatbox/Chatbox1";
-
+// import AuditForm from "./Components/COT/Auditform";
+import ProtectedRoute from "./ProtectedRoute"; 
 import NotificationsList from "./Components/GetNotification/NotificationList/NotificationList";
 const MainContent = () => {
   return (
@@ -36,14 +37,14 @@ const MainContent = () => {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/form"
           element={
             <ProtectedRoute>
               <AuditForm />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/notification"
           element={

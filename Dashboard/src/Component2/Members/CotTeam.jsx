@@ -11,12 +11,13 @@ export const CotTeam = ()=>{
     },[])
     const handleDelete = async (id) => {
         try {
-          await axios.delete(`http://localhost:8000/auth/deleteMember/${id}`);
-          setUser(user.filter((u) => u._id !== id));
+            await axios.delete(`http://localhost:8000/auth/deleteMember/${id}`);
+            setcotData(cotData.filter((u) => u._id !== id)); // ✅ Corrected line
         } catch (error) {
-          console.error("Error deleting project:", error);
+            console.error("Error deleting project:", error);
         }
-      };
+    };
+    
     return(
         <>
         <Container>
