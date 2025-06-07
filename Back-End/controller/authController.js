@@ -38,12 +38,16 @@ exports.login = async (req, res) => {
     const { email, password, userType } = req.body;
 
     try {
+      console.log("In try block");
         let user = await User.findOne({ email, userType });
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('User input password:', password);
+        console.log('Hashed password from DB:', user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
@@ -51,7 +55,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, userType: user.userType },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '9h' }
         );
 
         res.json({ token, userType: user.userType });
@@ -71,7 +75,14 @@ exports.sendOtp = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // if (!user.isApproved) {
+    //   return res.status(403).json({ message: "Your account is not approved yet" });
+    // }
+    
 
     // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -168,3 +179,41 @@ exports.getUserCounts = async (req, res) => {
   }
 };
   
+//get method for Doctors data
+// Get All Doctors
+exports.getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await User.find({ userType: 'doctor' }).select('firstName middleName lastName email');
+    res.status(200).json(doctors);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+//get api for cot team
+exports.getAllCotTeam = async (req,res) =>{
+  try{
+    const cot = await User.find({userType:'user'}).select('firstName middleName lastName email');
+    res.status(200).json(cot);
+  }catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+}
+
+// Delete API for doctor
+exports.deleteMember = async (req, res) => {
+  try {
+    const deletedData = await User.deleteOne({ _id: req.params._id });
+    
+    if (deletedData.deletedCount === 0) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    res.status(200).json({ message: "Doctor deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+};

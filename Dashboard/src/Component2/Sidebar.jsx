@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Col, Row, Button } from "react-bootstrap";
 import { BsBarChartLineFill } from "react-icons/bs";
@@ -10,34 +10,72 @@ import { GiConfirmed } from "react-icons/gi";
 import { LuCalendarCheck } from "react-icons/lu";
 import { PiImageSquare } from "react-icons/pi";
 import { IoIosArrowDropdown } from "react-icons/io";
-// ✅ Use correct source like shown below
-import ams from "../assets/black_on_trans.png"
+
+import profile from "../assets/adminProfile.webp"
 import './Sidebar.css';
+import { useAuth } from "../AuthContext";
+import axios from 'axios'
 
 const Sidebar = () => {
   const [show, setShow] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const [fullName, setFullName] = useState("");
+  const { isLoggedIn, selectedRole, activeTab, setActiveTab, handleLogout } =
+  useAuth();
   const closeSidebar = () => setShow(false);
   const toggleDropdown = () => setShowDropdown(!showDropdown);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get("http://localhost:8000/auth/me", {
+          headers: {
+            "x-auth-token": token,
+          },
+        });
+    
+        const { firstName, middleName, lastName } = response.data;
+        const middleInitial = middleName ? `${middleName[0]}.` : "";
+        const fullName = `${firstName} ${middleInitial} ${lastName}`;
+        setFullName(fullName.trim());
+      } catch (error) {
+        console.error(
+          "Error fetching user:",
+          error.response?.data?.message || error.message
+        );
+      }
+    };
+    
 
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  }, [isLoggedIn]);
+  
   const renderSidebarContent = () => (
     <>
       <div className="d-flex flex-column row-gap-2">
-        <div className="img d-flex justify-content-center">
+        {/* <div className="img d-flex justify-content-center">
           <img className="Iconimg" src={ams} alt="Logo" />
-        </div>
-        <div className="profileName mb-4 mt-4 d-flex column-gap-3 align-items-center">
-          {/* <img className="Profile-Pic" src={reva} alt="profile" /> */}
-          <span className="fw-bold"></span>
-        </div>
+        </div> */}
+        <div className="profileName mb-4 mt-3 d-flex flex-column align-items-center">
+    <img
+      src={profile} // 🔄 Replace with actual admin photo
+      alt="Admin"
+      className="rounded-circle mb-2"
+      style={{ width: "60px", height: "60px", objectFit: "cover" }}
+    />
+    <span className="fw-semibold text-dark">{fullName}</span>
+    <span className="text-muted" style={{ fontSize: "0.85rem" }}>Administrator</span>
+  </div>
       </div>
+      
 
       <Col className="menuList pb-4 d-flex flex-column gap-3">
         <NavLink to="/dashboard" className="Sidebar-menu" onClick={closeSidebar}>
           <BsBarChartLineFill className="me-3 fs-5 text-primary" /> Dashboard
         </NavLink>
-        <NavLink to="/college_registarion" className="Sidebar-menu" onClick={closeSidebar}>
+        <NavLink to="/acountRequest" className="Sidebar-menu" onClick={closeSidebar}>
           <FaUserPlus className="me-3 fs-5 text-success" /> Account Request
         </NavLink>
 
@@ -54,10 +92,10 @@ const Sidebar = () => {
           </div>
           {showDropdown && (
             <div className="d-flex flex-column gap-2 ps-4 pt-2 text-dark">
-              <Link to="/head/location" className="Sidebar-menu" onClick={closeSidebar}>
+              <Link to="/doctor" className="Sidebar-menu" onClick={closeSidebar}>
                 <FaMapMarkerAlt className="me-2 text-secondary" /> Doctor
               </Link>
-              <Link to="/head/university" className="Sidebar-menu" onClick={closeSidebar}>
+              <Link to="/cotTeam" className="Sidebar-menu" onClick={closeSidebar}>
                 <FaGraduationCap className="me-2 text-danger" /> COT Team
               </Link>
               <Link to="/head/getstate" className="Sidebar-menu" onClick={closeSidebar}>
@@ -73,13 +111,13 @@ const Sidebar = () => {
           )}
         </div>
 
-        <Link to="/head/getagenda" className="Sidebar-menu" onClick={closeSidebar}>
+        <Link to="/chatbox" className="Sidebar-menu" onClick={closeSidebar}>
           <AiOutlineCalendar className="me-3 fs-5 text-success" /> Chat Box
         </Link>
         {/* <Link to="/head/getfees" className="Sidebar-menu" onClick={closeSidebar}>
           <FaMoneyBillWave className="me-3 fs-5 text-primary" /> 
         </Link> */}
-        <Link to="/head/report" className="Sidebar-menu" onClick={closeSidebar}>
+        <Link to="/pushNotification" className="Sidebar-menu" onClick={closeSidebar}>
           <TbReport className="me-3 fs-5 text-danger" /> Push Notification
         </Link>
         <Link to="/head/ivrequest" className="Sidebar-menu" onClick={closeSidebar}>

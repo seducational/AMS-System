@@ -10,6 +10,7 @@ import ChatBoxComponent from "./Components/Chatbox/Chatbox1";
 import AuditForm from "./Components/COT/Auditform";
 import ProtectedRoute from "./ProtectedRoute"; // 
 
+import NotificationsList from "./Components/GetNotification/NotificationList/NotificationList";
 const MainContent = () => {
   return (
     <>
@@ -42,6 +43,14 @@ const MainContent = () => {
           element={
             <ProtectedRoute>
               <AuditForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notification"
+          element={
+            <ProtectedRoute>
+              <NotificationsList />
             </ProtectedRoute>
           }
         />

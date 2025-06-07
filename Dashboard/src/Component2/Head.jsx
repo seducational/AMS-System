@@ -5,6 +5,12 @@ import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
 import HeaderComponent from "./HeaderComponent";
+import { Doctor } from "./Members/Doctor";
+import { CotTeam } from "./Members/CotTeam";
+import Chatbox from './Chatbox/Chatbox1'
+import PushNotification from "./Notification/PushNotification";
+import NotificationsList from "./Notification/NotificationList";
+import AccountRequest from "./AccountRequest/AccountRequest";
 // import Fees from "./Fees";
 // import Agenda from "./Agenda";
 // import Location from "./Location";
@@ -59,6 +65,14 @@ const Head = () => {
         <Container>
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/doctor" element={<Doctor />} />
+            <Route path="/cotTeam" element={<CotTeam />} />
+            <Route path="/chatbox" element={<Chatbox />} />
+            <Route path="/pushNotification" element={<PushNotification />} />
+            <Route path="/notification" element={<NotificationsList />} />
+            <Route path="/acountRequest" element={<AccountRequest />} />
+
+            
             {/* <Route path="/fees" element={<Fees />} />
             <Route path="/agenda" element={<Agenda />} />
             <Route path="/location" element={<GetLocation />} />

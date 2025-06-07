@@ -7,8 +7,10 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     userType: { type: String, enum: ['admin', 'user', 'doctor'], required: true },
+    
     otp: { type: String },  // 🔥 Naya field for OTP
-    otpExpiry: { type: Date } // 🔥 OTP expiry time
+    otpExpiry: { type: Date }, // 🔥 OTP expiry time
+    isApproved: {type : Boolean}
 });
 
 module.exports = mongoose.model('User', userSchema);

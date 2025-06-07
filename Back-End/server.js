@@ -30,13 +30,19 @@ app.use('/auth', authRoutes);
 const messageRoutes = require('./route/messageRoutes');
 app.use('/api', messageRoutes);
 
+const notificationRoutes = require('./route/notifiacationRoute');
+app.use('/notify',notificationRoutes)
+
+const accountRequestRoutes = require('./route/accountRequestRoutes');
+app.use('/request', accountRequestRoutes);
+
 // Socket
 // Create HTTP server
 
 // Socket.IO setup
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     methods: ['GET', 'POST']
   }
 });

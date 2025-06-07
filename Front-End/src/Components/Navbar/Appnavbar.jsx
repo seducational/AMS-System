@@ -18,12 +18,12 @@ import axios from "axios";
 
 const AppNavbar = () => {
   const [username, setUsername] = useState("");
-
   const { isLoggedIn, selectedRole, activeTab, setActiveTab, handleLogout } =
     useAuth();
   const navigate = useNavigate();
   const cotTabs = ["Patient Data", "Team Chat", "Notifications"];
   const [fullName, setFullName] = useState("");
+  const [hasNewNotification, setHasNewNotification] = useState(false); // 🔴
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,7 +34,7 @@ const AppNavbar = () => {
             "x-auth-token": token,
           },
         });
-    
+
         const { firstName, middleName, lastName } = response.data;
         const middleInitial = middleName ? `${middleName[0]}.` : "";
         const fullName = `${firstName} ${middleInitial} ${lastName}`;
@@ -46,12 +46,39 @@ const AppNavbar = () => {
         );
       }
     };
-    
 
     if (isLoggedIn) {
       fetchUserData();
     }
   }, [isLoggedIn]);
+
+  // 🔄 Poll for new notifications every 10 seconds
+  useEffect(() => {
+    const checkNewNotifications = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/notify/getNotification");
+        const data = res.data;
+
+        const lastSeen = localStorage.getItem("lastSeenNotificationTime");
+        const latestNotificationTime = data?.[0]?.createdAt;
+
+        if (
+          latestNotificationTime &&
+          (!lastSeen || new Date(latestNotificationTime) > new Date(lastSeen))
+        ) {
+          setHasNewNotification(true);
+        }
+      } catch (err) {
+        console.error("Error fetching notifications:", err.message);
+      }
+    };
+
+    if (isLoggedIn && selectedRole === "user") {
+      checkNewNotifications();
+      const interval = setInterval(checkNewNotifications, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isLoggedIn, selectedRole]);
 
   return (
     <>
@@ -61,13 +88,11 @@ const AppNavbar = () => {
         style={{ height: "90px", position: "sticky", top: 0, zIndex: 1000 }}
       >
         <Container fluid>
-          {/* No heading or logo as per your request */}
           <Navbar.Brand className="fs-2 fw-bold text-dark">
             Antimicrobial Stewardship Hub
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {/* Show COT tabs only after login */}
             {isLoggedIn && selectedRole === "user" && (
               <Nav className="me-auto ms-4">
                 {cotTabs.map((tab) => (
@@ -80,7 +105,12 @@ const AppNavbar = () => {
                       } else if (tab === "Team Chat") {
                         navigate("/chatbox");
                       } else if (tab === "Notifications") {
-                        navigate("/notifications");
+                        navigate("/notification");
+                        localStorage.setItem(
+                          "lastSeenNotificationTime",
+                          new Date().toISOString()
+                        );
+                        setHasNewNotification(false); // 🧹 clear on click
                       }
                     }}
                     className={`fw-semibold ${
@@ -88,15 +118,28 @@ const AppNavbar = () => {
                         ? "text-primary border-bottom border-3 border-primary"
                         : "text-secondary"
                     }`}
-                    style={{ marginRight: "1rem" }}
+                    style={{ marginRight: "1rem", position: "relative" }}
                   >
                     {tab}
+                    {tab === "Notifications" && hasNewNotification && (
+                      <span
+                        style={{
+                          backgroundColor: "red",
+                          borderRadius: "50%",
+                          width: "10px",
+                          height: "10px",
+                          display: "inline-block",
+                          position: "absolute",
+                          top: "8px",
+                          right: "0px",
+                        }}
+                      ></span>
+                    )}
                   </Nav.Link>
                 ))}
               </Nav>
             )}
 
-            {/* Show Home and Help for non-logged users */}
             {!isLoggedIn && (
               <Nav className="d-flex w-75 justify-content-center">
                 <NavLink
@@ -115,15 +158,17 @@ const AppNavbar = () => {
             )}
           </Navbar.Collapse>
 
-          {/* Right side buttons */}
-          {isLoggedIn && selectedRole === "user"? (
+          {isLoggedIn && selectedRole === "user" ? (
             <Dropdown align="end" className="ms-2">
               <Dropdown.Toggle
                 variant="light"
                 id="dropdown-basic"
                 className="d-flex align-items-center icon-rounded text-secondary border-0"
               >
-               <span className="me-"> <PersonCircle size={35} className="me-1" /><span className="fw-bold">Hello!</span> {fullName}</span>
+                <span className="me-">
+                  <PersonCircle size={35} className="me-1" />
+                  <span className="fw-bold">Hello!</span> {fullName}
+                </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item href="#setup">
@@ -157,8 +202,6 @@ const AppNavbar = () => {
               </NavLink>
             </div>
           )}
-
-
         </Container>
       </Navbar>
       <Outlet />

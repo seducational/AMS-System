@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from '../AuthContext'
-
+import ams from "../assets/black_on_trans.png";
+import '../App.css'
 const LoginForm = () => {
   const { handleLogin,handleRoleChange,selectedRole,email,password,setemail,setPassword } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +11,9 @@ const LoginForm = () => {
   return (
     <Container className="d-flex justify-content-center align-items-center ">
       <Row className="w-100  justify-content-center mt-5 ">
+       <div className="img d-flex justify-content-center">
+                <img className="Iconimg2" src={ams} alt="Logo" />
+              </div>
         <Col md={8} lg={4} className="bg-white p-4 rounded shadow">
           <h1 className="text-center text-primary mb-4">Login</h1>
           <Form onSubmit={handleLogin}>
@@ -110,9 +114,6 @@ const LoginForm = () => {
               Login
             </Button>
 
-            <Form.Text className="text-center d-block mt-3">
-              Don't have an account? <a href="/register">Register</a>
-            </Form.Text>
           </Form>
         </Col>
       </Row>

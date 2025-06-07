@@ -16,5 +16,9 @@ router.post('/reset-password', authController.resetPasswordWithOtp);
 router.get('/me', authMiddleware, authController.getLoggedInUserName);
 
 router.get('/dashboard-counts', authController.getUserCounts);
+router.get('/doctors', authController.getAllDoctors);
+router.get('/cotTeam', authController.getAllCotTeam);
+
+router.delete('/deleteMember/:_id',authController.deleteMember)
 
 module.exports = router;
