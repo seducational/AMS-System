@@ -28,7 +28,7 @@ const Head = () => {
           <HeaderComponent />
         <Container>
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/doctor" element={<Doctor />} />
             <Route path="/cotTeam" element={<CotTeam />} />
             <Route path="/chatbox" element={<Chatbox />} />

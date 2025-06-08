@@ -1,116 +1,91 @@
 import React, { useEffect, useState } from 'react';
+import { Container, Table, Button, Alert, Spinner, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import { Table, Button, Spinner, Alert } from 'react-bootstrap';
 
-const AccountRequest = () => {
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
+const AccountRequests = () => {
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState(null);
 
-  // Fetch pending requests from backend
-  const fetchRequests = async () => {
-    setLoading(true);
-    setError('');
+  useEffect(() => {
+    fetchPendingUsers();
+  }, []);
+
+  const fetchPendingUsers = async () => {
     try {
-        const response = await axios.get(
-            'http://localhost:8000/request/admin/account-requests',
-
-            {
-                headers: {
-                    'x-auth-token': localStorage.getItem('authToken')
-                  }
-            });
-      setRequests(response.data.requests); // assume backend sends { requests: [...] }
-    } catch (err) {
-      setError('Failed to load requests');
-    } finally {
+      setLoading(true); // Start loader
+      const res = await axios.get('http://localhost:8000/auth/pending-requests');
+      setPendingUsers(res.data);
+      setLoading(false); // Stop loader
+    } catch (error) {
+      console.error('Error fetching pending users:', error);
       setLoading(false);
     }
   };
-  console.log("Stored Token:", localStorage.getItem('authToken'));
-  useEffect(() => {
-    fetchRequests();
-  }, []);
 
-  // Handle accept or reject
-  const handleAction = async (userId, action) => {
-    setActionLoading(true);
+  const approveUser = async (id) => {
     try {
-      const url = action === 'accept'
-        ? `http://localhost:8000/request/admin/approve-requests/${userId}`
-        : 'http://localhost:8000/request/admin/reject-requests';
-  
-      let payload = { id: userId };
-  
-      if (action === 'accept') {
-        const password = window.prompt("Enter a password for this user:");
-        if (!password) {
-          alert("Password is required to approve the request.");
-          setActionLoading(false);
-          return;
-        }
-        payload.password = password;
-      }
-  
-      await axios.post(url, payload, {
-        headers: {
-          'x-auth-token': localStorage.getItem('authToken')
-        }
-      });
-  
-      alert(`Request ${action}ed successfully`);
-      fetchRequests(); // Refresh list
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Failed to update request');
-    } finally {
-      setActionLoading(false);
+      await axios.put(`http://localhost:8000/auth/approve-user/${id}`);
+      setMessage('User approved successfully!');
+      fetchPendingUsers();
+    } catch (error) {
+      console.error('Error approving user:', error);
     }
   };
-  
-  
 
-  if (loading) return <Spinner animation="border" />;
-
-  if (error) return <Alert variant="danger">{error}</Alert>;
+  const rejectUser = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/auth/reject-user/${id}`);
+      setMessage('User rejected and deleted!');
+      fetchPendingUsers();
+    } catch (error) {
+      console.error('Error rejecting user:', error);
+    }
+  };
 
   return (
-    <div>
-      <h3>Pending Account Requests</h3>
-      {requests.length === 0 ? (
-        <p>No pending requests</p>
+    <Container className="mt-5">
+      <Row className="mb-3">
+        <Col><h3>Pending Account Requests</h3></Col>
+        <Col className="text-end">
+        <Button variant="outline-primary" onClick={fetchPendingUsers}>
+  <i className="bi bi-arrow-clockwise"></i>
+</Button>
+
+        </Col>
+      </Row>
+
+      {message && <Alert variant="info" onClose={() => setMessage(null)} dismissible>{message}</Alert>}
+
+      {loading ? (
+        <div className="text-center">
+          <Spinner animation="border" />
+        </div>
+      ) : pendingUsers.length === 0 ? (
+        <Alert variant="success">No pending requests</Alert>
       ) : (
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
           <thead>
             <tr>
+              <th>#</th>
               <th>Name</th>
               <th>Email</th>
               <th>User Type</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {requests.map((req) => (
-              <tr key={req._id}>
-                <td>{req.firstName} {req.middleName} {req.lastName}</td>
-                <td>{req.email}</td>
-                <td>{req.userType}</td>
+            {pendingUsers.map((user, index) => (
+              <tr key={user._id}>
+                <td>{index + 1}</td>
+                <td>{`${user.firstName} ${user.middleName} ${user.lastName}`}</td>
+                <td>{user.email}</td>
+                <td>{user.userType}</td>
                 <td>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    disabled={actionLoading}
-                    onClick={() => handleAction(req._id, 'accept')}
-                    className="me-2"
-                  >
+                  <Button variant="success" size="sm" onClick={() => approveUser(user._id)} className="me-2">
                     Accept
                   </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    disabled={actionLoading}
-                    onClick={() => handleAction(req._id, 'reject')}
-                  >
+                  <Button variant="danger" size="sm" onClick={() => rejectUser(user._id)}>
                     Reject
                   </Button>
                 </td>
@@ -119,8 +94,8 @@ const AccountRequest = () => {
           </tbody>
         </Table>
       )}
-    </div>
+    </Container>
   );
 };
 
-export default AccountRequest;
+export default AccountRequests;

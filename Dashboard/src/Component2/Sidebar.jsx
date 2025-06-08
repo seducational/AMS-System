@@ -72,7 +72,7 @@ const Sidebar = () => {
       
 
       <Col className="menuList pb-4 d-flex flex-column gap-3">
-        <NavLink to="/dashboard" className="Sidebar-menu" onClick={closeSidebar}>
+        <NavLink to="/" className="Sidebar-menu" onClick={closeSidebar}>
           <BsBarChartLineFill className="me-3 fs-5 text-primary" /> Dashboard
         </NavLink>
         <NavLink to="/acountRequest" className="Sidebar-menu" onClick={closeSidebar}>

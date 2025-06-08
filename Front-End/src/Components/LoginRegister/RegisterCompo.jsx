@@ -32,11 +32,11 @@ const RegisterForm = () => {
     try {
       const response = await axios.post('http://localhost:8000/auth/register', formData);
       console.log('Registration Success:', response.data);
-      alert('Registration successful!');
+      alert('Account request send to admin successfully!');
       navigate('/login');
     } catch (error) {
       console.error('Registration Error:', error.response);
-      alert('Error: ' + (error.response?.data?.message || 'Registration failed.'));
+      alert('Msg: ' + (error.response?.data?.message || 'Registration failed.'));
     }
   };
 

@@ -16,7 +16,7 @@ const LoginForm = () => {
             <Form.Group controlId="formBasicRole">
               <Form.Label>Select Role</Form.Label>
               <div className="d-flex gap-3 flex-wrap">
-                <Form.Check
+                {/* <Form.Check
                   type="radio"
                   label="Admin"
                   name="role"
@@ -24,7 +24,7 @@ const LoginForm = () => {
                   value="admin"
                   onChange={handleRoleChange}
                   checked={selectedRole === 'admin'}
-                />
+                /> */}
                 <Form.Check
                   type="radio"
                   label="User"

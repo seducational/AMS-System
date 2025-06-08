@@ -21,7 +21,8 @@ exports.register = async (req, res) => {
             lastName,
             email,
             password: hashedPassword,
-            userType
+            userType,
+            isApproved: false
         });
 
         await user.save();
@@ -43,7 +44,9 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
-
+        if (!user.isApproved) {
+          return res.status(403).json({ message: 'Your account is not approved yet' });
+      }
         
         const isMatch = await bcrypt.compare(password, user.password);
         console.log('User input password:', password);
@@ -116,6 +119,46 @@ exports.sendOtp = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+//approve user request
+exports.getPendingApprovals = async (req, res) => {
+  try {
+    const pendingUsers = await User.find({ isApproved: false }).select('firstName middleName lastName email userType');
+    res.status(200).json(pendingUsers);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.approveUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndUpdate(id, { isApproved: true }, { new: true });
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({ message: 'User approved successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.rejectUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({ message: 'User rejected and deleted' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
 
 //verify and reset password
 exports.resetPasswordWithOtp = async (req, res) => {

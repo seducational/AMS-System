@@ -9,6 +9,12 @@ router.post('/register', authController.register);
 // Login Route
 router.post('/login', authController.login);
 
+//admin approve requests
+router.get('/pending-requests', authController.getPendingApprovals); // Admin only
+router.put('/approve-user/:id', authController.approveUser);          // Admin only
+router.delete('/reject-user/:id', authController.rejectUser);         // Admin only
+
+
 //forgot password
 router.post('/send-otp', authController.sendOtp);
 router.post('/reset-password', authController.resetPasswordWithOtp);
