@@ -1,14 +1,28 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-  senderId: String,
-  senderName: String,
-  role: String,
-  message: String,
-  timestamp: { type: Date, default: Date.now },
-  room: String,
-  pinned: { type: Boolean, default: false },
-  reactions: { type: Object, default: {} },
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null   // null => public group chat
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
+  },
+  isGroup: {
+    type: Boolean,
+    default: false  // true => group chat
+  }
 });
 
-module.exports = mongoose.model("Message", messageSchema);
+module.exports = mongoose.model('Message', messageSchema);
