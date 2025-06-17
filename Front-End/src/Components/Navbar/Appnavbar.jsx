@@ -167,7 +167,7 @@ const AppNavbar = () => {
               >
                 <span className="me-">
                   <PersonCircle size={35} className="me-1" />
-                  <span className="fw-bold">Hello!</span> {fullName}
+                  <span className="fw-bold">Hello!</span> <span className="fw-normal">{fullName}</span>
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>

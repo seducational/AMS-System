@@ -1,30 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, Spinner, Alert } from 'react-bootstrap';
+import { Container, Card, Spinner, Alert, Button, Row, Col } from 'react-bootstrap';
 
 const NotificationsList = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/notify/getNotification');
-        const data = await res.json();
-        setNotifications(data);
-      } catch (err) {
-        setError('Failed to fetch notifications.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchNotifications = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('http://localhost:8000/notify/getNotification');
+      const data = await res.json();
+      setNotifications(data);
+    } catch (err) {
+      setError('Failed to fetch notifications.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchNotifications();
   }, []);
 
   return (
     <Container className="my-5" style={{ maxWidth: '800px' }}>
-      <h2 className="mb-4 text-center">🔔 Notifications</h2>
+      <Row className="align-items-center mb-4">
+        <Col>
+          <h2 className="text-center text-md-start">🔔 Notifications</h2>
+        </Col>
+        <Col className="text-end">
+        <Button variant="outline-primary" onClick={fetchNotifications}>
+            <i className="bi bi-arrow-clockwise"></i>
+          </Button>
+        </Col>
+      </Row>
 
       {loading ? (
         <div className="text-center">
