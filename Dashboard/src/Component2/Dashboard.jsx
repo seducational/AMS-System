@@ -6,8 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaUserDoctor } from "react-icons/fa6";
 import { RiTeamFill } from "react-icons/ri";
 import { FcPlus } from "react-icons/fc";
-
-
+import InfectionPieChart from "./Piechart/InfectionPieChart";
+import ComplianceStats from "./DashboardContent/ComplianceStats";
 
 const WaveSVG = ({ fill }) => (
   <svg
@@ -77,17 +77,8 @@ const Card = ({ count, label, icon, color }) => (
 );
 
 const Dashboard = () => {
-  const [counts, setCounts] = useState({ doctorsCount: 0, cotTeamCount: 0 });
-  const [totalVisits, setTotalVisits] = useState(0);
-  const [currentWeekVisits, setCurrentWeekVisits] = useState(0);
-  const [currentMonthVisits, setCurrentMonthVisits] = useState(0);
-  const [collegeData, setCollegeData] = useState([]);
-  const [totalColleges, setTotalColleges] = useState(0);
-  const [mouSigned, setMouSigned] = useState(0);
-  const [noMouSigned, setNoMouSigned] = useState(0);
-  const [lastColleges, setLastColleges] = useState([]);
-  const [totalUpcomingVisitsCount, setUpcomingVisitsCount] = useState(0);
-  const [cancelledVisitCount, setCancelledVisitCount] = useState(0);
+  const [counts, setCounts] = useState({ doctorsCount: 0, cotTeamCount: 0});
+  const [patientCount, setPatientCount] = useState(0);
 
   useEffect(() => {
     axios.get('http://localhost:8000/auth/dashboard-counts') 
@@ -98,69 +89,39 @@ const Dashboard = () => {
       .catch(err => console.log(err));
   }, []);
   
-
   useEffect(() => {
-    axios.get("http://localhost:8000/getvisit")
+    axios.get("http://localhost:8000/patient/count")
       .then((res) => {
-        const data = res.data.userData;
-        setVisitData(data);
-
-        setCancelledVisitCount(data.filter((v) => v.visit_cancelled === "cancelled").length);
-        setTotalVisits(data.length);
-
-        const now = new Date();
-
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - now.getDay());
-        startOfWeek.setHours(0, 0, 0, 0);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        endOfWeek.setHours(23, 59, 59, 999);
-
-        const currentWeekVisits = data.filter((visit) => {
-          const visitDate = new Date(visit.Date_of_visit);
-          return visitDate >= startOfWeek && visitDate <= endOfWeek;
-        });
-        setCurrentWeekVisits(currentWeekVisits.length);
-
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        startOfMonth.setHours(0, 0, 0, 0);
-        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        endOfMonth.setHours(23, 59, 59, 999);
-
-        const currentMonthVisits = data.filter((visit) => {
-          const visitDate = new Date(visit.Date_of_visit);
-          return visitDate >= startOfMonth && visitDate <= endOfMonth;
-        });
-        setCurrentMonthVisits(currentMonthVisits.length);
-
-        const lastFiveColleges = [...new Set(data.map((v) => v.college_name))].slice(-5);
-        setLastColleges(lastFiveColleges);
-
-        const upcomingVisits = data.filter((visit) => {
-          const visitDate = new Date(visit.Date_of_visit);
-          return visitDate >= new Date();
-        });
-        setUpcomingVisitsCount(upcomingVisits.length);
+        setPatientCount(res.data.totalPatients);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error("Error fetching patient count:", err);
+      });
   }, []);
 
+  
+
   return (
+    <>
     <Container className="mt-4">
       <Row className="gx-4">
-        {/* <Col md={4}><Card count={totalVisits} label="Total Visits" color="url(#grad1)" /></Col> */}
         <Col md={4}><Card count={counts.doctorsCount} label="Doctors" color="url(#grad2)" icon={<FaUserDoctor className="fs-3 " />} /></Col>
-        {/* <Col md={4}><Card count={currentMonthVisits} label="Current Month Visits" color="url(#grad3)" /></Col> */}
         <Col md={4}><Card count={counts.cotTeamCount} label="COT Team" color="url(#grad6)" icon={<RiTeamFill className="fs-3 " />} />
         </Col>
-        <Col md={4}><Card count={cancelledVisitCount} label="Patients Visits" color="url(#grad4)" icon={<FcPlus className="fs-3 " />}/></Col>
-        {/* <Col md={4}><Card count={totalColleges} label="Total Registered Colleges" color="url(#grad5)" /></Col> */}
-        {/* <Col md={4}><Card count={noMouSigned} label="Non MOU Signed Colleges" color="url(#grad1)" /></Col>
-        <Col md={4}><Card count={totalUpcomingVisitsCount} label="Upcoming Visits" color="url(#grad2)" /></Col> */}
+        <Col md={4}><Card count={patientCount} label="Patients Visits" color="url(#grad4)" icon={<FcPlus className="fs-3 " />}/></Col>
       </Row>
       <ToastContainer />
+      <Row>
+        <Col md={6}>
+          <InfectionPieChart />
+        </Col>
+        <Col md={6}>
+          <ComplianceStats />
+        </Col>
+      </Row>
     </Container>
+
+    </>
   );
 };
 

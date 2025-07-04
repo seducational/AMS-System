@@ -47,19 +47,12 @@ function ChatBoxComponent() {
         const res = await axios.get(
           "http://localhost:8000/api/get-messages?isGroup=true"
         );
-        const formatted = res.data.map((msg) => {
-          const sender = msg.sender;
-          const name = sender
-            ? `${sender.firstName}${
-                sender.userType === "admin" ? " (Admin)" : ""
-              }`
-            : "Unknown";
-          return {
-            user: name,
-            text: msg.content,
-          };
-        });
-
+        const formatted = res.data.map((msg) => ({
+          user: `${msg.sender.firstName}${
+            msg.sender.userType === "admin" ? " (Admin)" : ""
+          }`,
+          text: msg.content,
+        }));
         setChat(formatted);
       } catch (error) {
         console.error("Error loading chat history:", error.message);

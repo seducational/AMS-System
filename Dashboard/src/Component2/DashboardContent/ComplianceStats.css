@@ -1,0 +1,78 @@
+.compliance-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 850px;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.compliance-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.date-filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.compliance-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.compliance-card {
+  flex: 1;
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.compliance-card h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.compliance-card p {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.reserve {
+  background-color: #4B49AC;
+}
+
+.empirical {
+  background-color: #1BCFB4;
+}
+
+.deescalation {
+  background-color: #F95F53;
+}

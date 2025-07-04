@@ -52,9 +52,10 @@ exports.getMessages = async (req, res) => {
     }
 
     const messages = await Message.find(filter)
-      .sort({ timestamp: 1 })
-      .populate('sender', 'firstName userType')
-      .populate('receiver', 'firstName userType');
+  .sort({ timestamp: 1 })
+  .populate('sender', 'firstName middleName lastName userType')
+  .populate('receiver', 'firstName middleName lastName userType')
+  .then((msgs) => msgs.filter(msg => msg.sender));  // 👈 Filter out null senders
 
     res.json(messages);
   } catch (error) {

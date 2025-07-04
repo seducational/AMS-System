@@ -43,9 +43,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 .Iconimg {
-  height: 100px;
-  min-width: 180px;
-  object-fit: cover;
+  height: 90px;
+  min-width: 110px;
+  /* object-fit:inherit; */
 }
 .profileName {
   min-width: 170px;

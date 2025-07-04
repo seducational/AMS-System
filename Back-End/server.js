@@ -31,6 +31,12 @@ const chatRoutes = require('./route/chatRoutes');
 app.use('/api', chatRoutes);
 
 //Patient Data Routes
+const notificationRoutes = require('./route/notifiacationRoute');
+app.use('/notify',notificationRoutes)
+
+const accountRequestRoutes = require('./route/accountRequestRoutes');
+app.use('/request', accountRequestRoutes);
+
 const patientDataRoutes = require('./route/PatientDataRoute');
 app.use('/patient', patientDataRoutes);
 // Socket
@@ -40,7 +46,7 @@ app.use('/patient', patientDataRoutes);
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     methods: ['GET', 'POST']
   }
 });

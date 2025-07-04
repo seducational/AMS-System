@@ -26,6 +26,7 @@ function socketHandler(io) {
       io.emit('userList', Object.values(users));
       console.log(`${username} disconnected`);
     });
+
   });
 }
 

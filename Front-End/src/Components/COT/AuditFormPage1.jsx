@@ -2,28 +2,24 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 
-const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
-  // State to manage the past history field
+const AuditFormPage1 = ({ formData, handleChange, setFormData, errors }) => {
   const [pastHistory, setPastHistory] = useState("");
-
-  // Sync local state with formData on mount or update
-  useEffect(() => {
-    setPastHistory(formData.Past_History || ""); // Note the capital 'P' to match the field name
-  }, [formData.Past_History]);
-
-  
   const [startDate, setStartDate] = useState(formData.Started_Date || "");
   const [endDate, setEndDate] = useState(formData.End_Date || "");
-  
+
   useEffect(() => {
-  const duration = calculateDuration();
-  setFormData((prevData) => ({
-    ...prevData,
-    Started_Date: startDate,
-    End_Date: endDate,
-    Duration: duration,
-  }));
-}, [startDate, endDate]);
+    setPastHistory(formData.Past_History || "");
+  }, [formData.Past_History]);
+
+  useEffect(() => {
+    const duration = calculateDuration();
+    setFormData((prevData) => ({
+      ...prevData,
+      Started_Date: startDate,
+      End_Date: endDate,
+      Duration: duration,
+    }));
+  }, [startDate, endDate]);
 
   const calculateDuration = () => {
     if (startDate && endDate) {
@@ -36,49 +32,48 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
     return "";
   };
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const date = new Date(dateStr);
-    if (isNaN(date)) return "";
-    return date.toISOString().split("T")[0];
-  };
-
   return (
     <Form>
       <Row>
         <Col md={4}>
           <Form.Group>
-            <Form.Label>UHID</Form.Label>
+            <Form.Label>UHID <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               value={formData.UHID || ""}
               onChange={(e) => handleChange("UHID", e.target.value)}
+              isInvalid={!!errors.UHID}
             />
+            <Form.Control.Feedback type="invalid">{errors.UHID}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group>
-            <Form.Label>Age</Form.Label>
+            <Form.Label>Age <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               value={formData.Age || ""}
-              onChange={(e) => handleChange("Age", Number(e.target.value))}
+              onChange={(e) => handleChange("Age", e.target.value)}
+              isInvalid={!!errors.Age}
             />
+            <Form.Control.Feedback type="invalid">{errors.Age}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group>
-            <Form.Label>Sex</Form.Label>
+            <Form.Label>Sex <span className="text-danger">*</span></Form.Label>
             <Form.Control
               as="select"
               value={formData.Sex || ""}
               onChange={(e) => handleChange("Sex", e.target.value)}
+              isInvalid={!!errors.Sex}
             >
-              <option className="text-secondary">Select-</option>
-              <option className="text-dark">Male</option>
-              <option className="text-dark">Female</option>
-              <option className="text-dark">Others</option>
+              <option value="">Select-</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Others</option>
             </Form.Control>
+            <Form.Control.Feedback type="invalid">{errors.Sex}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>
@@ -86,22 +81,26 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
       <Row>
         <Col md={6}>
           <Form.Group className="mt-3">
-            <Form.Label>Indication</Form.Label>
+            <Form.Label>Indication <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               value={formData.Indication || ""}
               onChange={(e) => handleChange("Indication", e.target.value)}
+              isInvalid={!!errors.Indication}
             />
+            <Form.Control.Feedback type="invalid">{errors.Indication}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group className="mt-3">
-            <Form.Label>Diagnosis</Form.Label>
+            <Form.Label>Diagnosis <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               value={formData.Diagnosis || ""}
               onChange={(e) => handleChange("Diagnosis", e.target.value)}
+              isInvalid={!!errors.Diagnosis}
             />
+            <Form.Control.Feedback type="invalid">{errors.Diagnosis}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>
@@ -109,33 +108,35 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
       <Row>
         <Col md={4}>
           <Form.Group className="mt-3">
-            <Form.Label>Past History</Form.Label>
+            <Form.Label>Past History <span className="text-danger">*</span></Form.Label>
             <Form.Control
               as="select"
               value={formData.Past_History || ""}
               onChange={(e) => {
-                const value = e.target.value;
-                handleChange("Past_History", value);
-                setPastHistory(value); // Keep local state in sync
+                handleChange("Past_History", e.target.value);
+                setPastHistory(e.target.value);
               }}
+              isInvalid={!!errors.Past_History}
             >
               <option value="">Select-</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </Form.Control>
+            <Form.Control.Feedback type="invalid">{errors.Past_History}</Form.Control.Feedback>
           </Form.Group>
         </Col>
-
         <Col md={8}>
           <Form.Group className="mt-3">
-            <Form.Label>Co-morbidities</Form.Label>
+            <Form.Label>Co-morbidities {pastHistory === "Yes" && <span className="text-danger">*</span>}</Form.Label>
             <Form.Control
               type="text"
               value={formData.Co_morbidities || ""}
               onChange={(e) => handleChange("Co_morbidities", e.target.value)}
               disabled={pastHistory === "No"}
               placeholder={pastHistory === "No" ? "Disabled" : "Enter details"}
+              isInvalid={!!errors.Co_morbidities}
             />
+            <Form.Control.Feedback type="invalid">{errors.Co_morbidities}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>
@@ -143,105 +144,71 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
       <Row className="mt-3">
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Empirical Therapy given (Y/N)</Form.Label>
+            <Form.Label>Empirical Therapy <span className="text-danger">*</span></Form.Label>
             <Form.Control
               as="select"
               value={formData.Empirical_Therapy || ""}
-              onChange={(e) =>
-                handleChange("Empirical_Therapy", e.target.value)
-              }
+              onChange={(e) => handleChange("Empirical_Therapy", e.target.value)}
+              isInvalid={!!errors.Empirical_Therapy}
             >
-              <option value="" className="text-secondary">
-                Select-
-              </option>
-              <option value="Yes" className="text-dark">
-                Yes
-              </option>
-              <option value="No" className="text-dark">
-                No
-              </option>
+              <option value="">Select-</option>
+              <option>Yes</option>
+              <option>No</option>
             </Form.Control>
+            <Form.Control.Feedback type="invalid">{errors.Empirical_Therapy}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>
 
       <Row className="mb-3 mt-3 border p-3 rounded">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Antibiotic Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Antibiotic_name || ""}
-              onChange={(e) => handleChange("Antibiotic_name", e.target.value)}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Dose</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Dose || ""}
-              onChange={(e) => handleChange("Dose", e.target.value)}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Route</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Route || ""}
-              onChange={(e) => handleChange("Route", e.target.value)}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Frequency</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Frequency || ""}
-              onChange={(e) => handleChange("Frequency", e.target.value)}
-            />
-          </Form.Group>
-        </Col>
+        {[
+          { label: "Antibiotic Name", key: "Antibiotic_name" },
+          { label: "Dose", key: "Dose" },
+          { label: "Route", key: "Route" },
+          { label: "Frequency", key: "Frequency" }
+        ].map(({ label, key }) => (
+          <Col md={6} key={key}>
+            <Form.Group>
+              <Form.Label>{label} <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                type="text"
+                value={formData[key] || ""}
+                onChange={(e) => handleChange(key, e.target.value)}
+                isInvalid={!!errors[key]}
+              />
+              <Form.Control.Feedback type="invalid">{errors[key]}</Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        ))}
       </Row>
 
-      {/* Date fields for start and end date */}
       <Row className="mt-3">
         <Col md={6}>
-          <Form.Group className="mt-3">
-            <Form.Label>Started on</Form.Label>
+          <Form.Group>
+            <Form.Label>Started Date <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="date"
               value={startDate || ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                setStartDate(value);
-              }}
+              onChange={(e) => setStartDate(e.target.value)}
+              isInvalid={!!errors.Started_Date}
             />
+            <Form.Control.Feedback type="invalid">{errors.Started_Date}</Form.Control.Feedback>
           </Form.Group>
         </Col>
-
         <Col md={6}>
-          <Form.Group className="mt-3">
-            <Form.Label>Last Dose Date</Form.Label>
+          <Form.Group>
+            <Form.Label>Last Dose Date <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="date"
               value={endDate || ""}
               min={startDate}
+              onChange={(e) => setEndDate(e.target.value)}
               disabled={!startDate}
-              onChange={(e) => {
-                const value = e.target.value;
-                setEndDate(value);
-                handleChange("End_Date", value);
-                handleChange("Duration", calculateDuration());
-              }}
+              isInvalid={!!errors.End_Date}
             />
+            <Form.Control.Feedback type="invalid">{errors.End_Date}</Form.Control.Feedback>
           </Form.Group>
         </Col>
-
         <Col xs={12} className="d-flex justify-content-end mt-2">
           <strong>Days Duration: {calculateDuration()}</strong>
         </Col>
@@ -250,7 +217,7 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
       <Row className="mt-3">
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Culture sent before starting (Y/N)</Form.Label>
+            <Form.Label>Culture sent before starting <span className="text-danger">*</span></Form.Label>
             <Form.Control
               as="select"
               value={
@@ -261,26 +228,27 @@ const AuditFormPage1 = ({ formData, handleChange,setFormData }) => {
                   : ""
               }
               onChange={(e) =>
-                handleChange(
-                  "Culture_sent_before_start",
-                  e.target.value === "Yes"
-                )
+                handleChange("Culture_sent_before_start", e.target.value === "Yes")
               }
+              isInvalid={!!errors.Culture_sent_before_start}
             >
-              <option className="text-secondary">Select-</option>
-              <option className="text-secondary">Yes</option>
-              <option className="text-secondary">No</option>
+              <option value="">Select-</option>
+              <option>Yes</option>
+              <option>No</option>
             </Form.Control>
+            <Form.Control.Feedback type="invalid">{errors.Culture_sent_before_start}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Specimen</Form.Label>
+            <Form.Label>Specimen <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               value={formData.Specimen || ""}
               onChange={(e) => handleChange("Specimen", e.target.value)}
+              isInvalid={!!errors.Specimen}
             />
+            <Form.Control.Feedback type="invalid">{errors.Specimen}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>
