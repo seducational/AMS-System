@@ -228,7 +228,8 @@ exports.getUserCounts = async (req, res) => {
 // Get All Doctors
 exports.getAllDoctors = async (req, res) => {
   try {
-    const doctors = await User.find({ userType: 'doctor' }).select('firstName middleName lastName email');
+    const doctors = await User.find({ userType: 'doctor', isApproved: true })  // ✅ isApproved filter added
+      .select('firstName middleName lastName email');
     res.status(200).json(doctors);
   } catch (error) {
     console.error(error.message);
@@ -236,10 +237,11 @@ exports.getAllDoctors = async (req, res) => {
   }
 };
 
+
 //get api for cot team
-exports.getAllCotTeam = async (req, res) => {
-  try {
-    const cot = await User.find({ userType: 'user' }).select('firstName middleName lastName email');
+exports.getAllCotTeam = async (req,res) =>{
+  try{
+    const cot = await User.find({userType:'user', isApproved: true}).select('firstName middleName lastName email');
     res.status(200).json(cot);
   } catch (error) {
     console.error(error.message);
