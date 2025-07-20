@@ -42,7 +42,7 @@ _Replace with your actual hosted link when ready._
 ![Login Page](./Screenshots/main/main-login.png)
 
 ### 🧑‍⚕️ Doctor Dashboard
-![Doctor Dashboard](./screenshots/doctor-dashboard.png)
+![Doctor Dashboard](./screenshots/dashboard.png)
 
 ### 📩 Admin Approval Interface
 ![Admin Approval](./screenshots/admin-approval.png)
