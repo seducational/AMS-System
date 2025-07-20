@@ -39,7 +39,7 @@ _Replace with your actual hosted link when ready._
 ## 📷 Screenshots
 
 ### 🔐 Login Page
-![Login Page]()
+![Login Page](./Screenshots/main/main-login.png)
 
 ### 🧑‍⚕️ Doctor Dashboard
 ![Doctor Dashboard](./screenshots/doctor-dashboard.png)
