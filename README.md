@@ -30,7 +30,7 @@ The **Antimicrobial Stewardship System** (AMS) is a MERN-based healthcare projec
 ![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen?logo=mongodb)
 ![Express.js](https://img.shields.io/badge/Express.js-Backend-lightgrey?logo=express)
-![Socket.IO](https://img.shields.io/badge/Socket.IO-Chat%20Feature-black?logo=socket.io)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-Chat%20Feature-pink?logo=socket.io)
 ![Firebase](https://img.shields.io/badge/Firebase-Notifications-yellow?logo=firebase)
 
 ---
