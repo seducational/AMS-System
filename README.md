@@ -60,10 +60,10 @@ _Replace with your actual hosted link when ready._
 ![Doctor Dashboard](./Screenshots/dashboard.png)
 
 ### 📩 Admin Approval Interface
-![Admin Approval](./screenshots/account_request.png)
+![Admin Approval](./Screenshots/account_request.png)
 
 ### 💬 Send Notification
-![Chat Feature](./screenshots/send_notification.png)
+![Send Notification](./Screenshots/send_notification.png)
 
 > 🔔 _Make sure you place actual screenshots in a `screenshots/` folder inside the root of your project._
 
