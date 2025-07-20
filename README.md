@@ -46,14 +46,24 @@ _Replace with your actual hosted link when ready._
 
 ### 🤒 Patient Record
 ![Patient Page](./Screenshots/patient_record.jpg)
+
+### 🔔 Notification
+![Notification Page](./Screenshots/notification.png)
+
+### 💬 Realtime Chat
+![Patient Page](./Screenshots/chatbox.png)
+
+### 🔏 Admin Login
+![Patient Page](./Screenshots/admin_login.png)
+
 ### 👤 Admin Dashboard
 ![Doctor Dashboard](./Screenshots/dashboard.png)
 
 ### 📩 Admin Approval Interface
-![Admin Approval](./screenshots/admin-approval.png)
+![Admin Approval](./screenshots/account_request.png)
 
-### 💬 Real-Time Chat
-![Chat Feature](./screenshots/chat-feature.png)
+### 💬 Send Notification
+![Chat Feature](./screenshots/send_notification.png)
 
 > 🔔 _Make sure you place actual screenshots in a `screenshots/` folder inside the root of your project._
 
