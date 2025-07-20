@@ -39,10 +39,10 @@ _Replace with your actual hosted link when ready._
 ## 📷 Screenshots
 
 ### 🔐 Login Page
-![Login Page](./Screenshots/main/main-login.png)
+![Login Page](./Screenshots/main/main login.png)
 
-### 🧑‍⚕️ Doctor Dashboard
-![Doctor Dashboard](./screenshots/dashboard.png)
+### 👤 Admin Dashboard
+![Doctor Dashboard](./Screenshots/dashboard.png)
 
 ### 📩 Admin Approval Interface
 ![Admin Approval](./screenshots/admin-approval.png)
