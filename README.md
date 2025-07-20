@@ -39,8 +39,13 @@ _Replace with your actual hosted link when ready._
 ## 📷 Screenshots
 
 ### 🔐 Login Page
-![Login Page](./Screenshots/main/main login.png)
+![Login Page](./Screenshots/main_login.png)
 
+### 👥 Register
+![Register Page](./Screenshots/register_form.png)
+
+### 🤒 Patient Record
+![Patient Page](./Screenshots/patient_record.jpg)
 ### 👤 Admin Dashboard
 ![Doctor Dashboard](./Screenshots/dashboard.png)
 
