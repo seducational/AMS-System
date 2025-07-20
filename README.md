@@ -20,8 +20,7 @@ The **Antimicrobial Stewardship System** (AMS) is a MERN-based healthcare projec
 
 ## 🔴 Live Demo
 
-🌐 [Click here to see live demo](https://your-demo-url.com)  
-_Replace with your actual hosted link when ready._
+🌐 Website is under Maintenance
 
 ---
 
