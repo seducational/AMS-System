@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     console.log("Login Payload:", payload);
 
     axios
-      .post('${import.meta.env.VITE_BACKEND_URL}/auth/login', payload)
+      .post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, payload)
       .then((response) => {
         console.log("Login Success:", response.data); // Response log to check the data received
         toast.success("Login Successful")
