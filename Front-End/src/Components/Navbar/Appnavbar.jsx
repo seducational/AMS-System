@@ -27,7 +27,7 @@ const AppNavbar = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get("${import.meta.env.VITE_BACKEND_URL}/auth/me", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/me`, {
           headers: {
             "x-auth-token": token,
           },
@@ -54,7 +54,7 @@ const AppNavbar = () => {
   useEffect(() => {
     const checkNewNotifications = async () => {
       try {
-        const res = await axios.get("${import.meta.env.VITE_BACKEND_URL}/notify/getNotification");
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}notify/getNotification`);
         const data = res.data;
 
         const lastSeen = localStorage.getItem("lastSeenNotificationTime");
