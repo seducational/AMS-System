@@ -77,20 +77,22 @@ const Card = ({ count, label, icon, color }) => (
 );
 
 const Dashboard = () => {
-  const [counts, setCounts] = useState({ doctorsCount: 0, cotTeamCount: 0});
+  const [counts, setCounts] = useState({ doctorsCount: 0, cotTeamCount: 0 });
   const [patientCount, setPatientCount] = useState(0);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/auth/dashboard-counts') 
-      .then(res => {
-        console.log("Dashboard Counts API response:", res.data);  // Add this line
+    axios
+      .get("http://localhost:8000/auth/dashboard-counts")
+      .then((res) => {
+        console.log("Dashboard Counts API response:", res.data); // Add this line
         setCounts(res.data);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
-  
+
   useEffect(() => {
-    axios.get("http://localhost:8000/patient/count")
+    axios
+      .get("http://localhost:8000/patient/count")
       .then((res) => {
         setPatientCount(res.data.totalPatients);
       })
@@ -99,28 +101,59 @@ const Dashboard = () => {
       });
   }, []);
 
-  
-
   return (
     <>
-    <Container className="mt-4">
-      <Row className="gx-4">
-        <Col md={4}><Card count={counts.doctorsCount} label="Doctors" color="url(#grad2)" icon={<FaUserDoctor className="fs-3 " />} /></Col>
-        <Col md={4}><Card count={counts.cotTeamCount} label="COT Team" color="url(#grad6)" icon={<RiTeamFill className="fs-3 " />} />
-        </Col>
-        <Col md={4}><Card count={patientCount} label="Patients Visits" color="url(#grad4)" icon={<FcPlus className="fs-3 " />}/></Col>
-      </Row>
-      <ToastContainer />
-      <Row>
-        <Col md={6}>
-          <InfectionPieChart />
-        </Col>
-        <Col md={6}>
-          <ComplianceStats />
-        </Col>
-      </Row>
-    </Container>
-
+      <Container className="mt-4">
+        <Row className="gx-4">
+          <Col md={4}>
+            <Card
+              count={counts.doctorsCount}
+              label="Doctors"
+              color="url(#grad2)"
+              icon={<FaUserDoctor className="fs-3 " />}
+            />
+          </Col>
+          <Col md={4}>
+            <Card
+              count={counts.cotTeamCount}
+              label="COT Team"
+              color="url(#grad6)"
+              icon={<RiTeamFill className="fs-3 " />}
+            />
+          </Col>
+          <Col md={4}>
+            <Card
+              count={patientCount}
+              label="Patients Visits"
+              color="url(#grad4)"
+              icon={<FcPlus className="fs-3 " />}
+            />
+          </Col>
+        </Row>
+        <ToastContainer />
+        <Row className="mt-4 align-items-stretch">
+          <Col md={6}>
+            <div
+              className="card shadow-sm h-100"
+              style={{ padding: "1rem", borderRadius: "1rem" }}
+            >
+              <h5 className="mb-3 text-center">
+                🧫 Infection Type Distribution
+              </h5>
+              <InfectionPieChart />
+            </div>
+          </Col>
+          <Col md={6}>
+            <div
+              className="card shadow-sm h-100"
+              style={{ padding: "1rem", borderRadius: "1rem" }}
+            >
+              <h5 className="mb-3 text-center">📊 Compliance Metrics</h5>
+              <ComplianceStats />
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };

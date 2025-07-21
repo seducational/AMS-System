@@ -104,8 +104,8 @@ const RegisterForm = () => {
                 onChange={handleChange}
               >
                 <option value="" disabled>Select user type</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
+                {/* <option value="admin">Admin</option> */}
+                <option value="user">COT</option>
                 <option value="doctor">Doctor</option>
               </Form.Select>
             </Form.Group>

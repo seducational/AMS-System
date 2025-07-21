@@ -51,7 +51,7 @@ const InfectionPieChart = () => {
   return (
     <div className="chart-container">
       <div className="chart-card lg6">
-        <h2>🧫 Infection Type Distribution</h2>
+        {/* <h2>🧫 Infection Type Distribution</h2> */}
 
         <div className="date-filters">
           <div className="form-group">

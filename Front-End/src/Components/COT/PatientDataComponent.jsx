@@ -14,10 +14,15 @@ import "react-toastify/dist/ReactToastify.css";
 // import { useNavigate } from 'react-router-dom';
 import AuditFormPage1 from "./AuditFormPage1";
 import AuditFormPage2 from "./AuditFormPage2";
-import { FaEye } from "react-icons/fa";
 import axios from "axios";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
+import { useAuth } from "../../AuthContext";
 
 const PatientDataComponent = () => {
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({});
@@ -32,6 +37,7 @@ const PatientDataComponent = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState("");
+  const { selectedRole } = useAuth();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -52,6 +58,61 @@ const PatientDataComponent = () => {
   const handleView = (patient) => {
     setSelectedPatient(patient);
     setShowModal(true);
+  };
+
+  const handleEdit = (patient) => {
+    setFormData(patient); // fill form with existing data
+    setEditMode(true);
+    setEditId(patient._id);
+    setPage(1); // open from page 1
+    setShow(true); // open modal
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/patient/update/${editId}`,
+        formData
+      );
+      toast.success("Record updated successfully!");
+      setShow(false);
+      setEditMode(false);
+      setEditId(null);
+      setFormData({});
+      setErrors({});
+      // reload patients
+      const res = await axios.get("http://localhost:8000/patient/all");
+      setPatients(res.data.reverse());
+    } catch (error) {
+      toast.error("Update failed!");
+      console.error(error);
+    }
+  };
+
+  const handleDelete = (id) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure you want to delete this record?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            try {
+              await axios.delete(`http://localhost:8000/patient/delete/${id}`);
+              toast.success("Record deleted successfully!");
+              setPatients(patients.filter((p) => p._id !== id));
+            } catch (error) {
+              toast.error("Delete failed!");
+              console.error(error);
+            }
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
   };
 
   const exportToExcel = () => {
@@ -207,14 +268,16 @@ const PatientDataComponent = () => {
       <Container className="my-4">
         <h3 className="mb-4 text-center">🧾 Patient Records</h3>
         <div className="d-flex justify-content-end mb-3 gap-2">
-          <Button
-            variant="primary"
-            className="d-flex justify-content-center align-items-center gap-2"
-            onClick={() => setShow(true)}
-          >
-            <FaUserPlus />
-            Add Patient
-          </Button>
+          {selectedRole === "user" && (
+            <Button
+              variant="primary"
+              className="d-flex justify-content-center align-items-center gap-2"
+              onClick={() => setShow(true)}
+            >
+              <FaUserPlus />
+              Add Patient
+            </Button>
+          )}
           <Button variant="success" onClick={exportToExcel}>
             Export to Excel
           </Button>
@@ -238,7 +301,7 @@ const PatientDataComponent = () => {
                 <th>Sex</th>
                 <th>Started Date</th>
                 <th>End Date</th>
-                <th>Action</th>
+                <th className="text-center col-2">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -249,14 +312,36 @@ const PatientDataComponent = () => {
                   <td>{patient.Sex}</td>
                   <td>{new Date(patient.Started_Date).toLocaleDateString()}</td>
                   <td>{new Date(patient.End_Date).toLocaleDateString()}</td>
-                  <td>
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleView(patient)}
-                    >
-                      View
-                    </Button>
+                  <td className="justify-content-center align-items-center d-flex gap-2">
+                    <td className="justify-content-center align-items-center d-flex gap-2">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleView(patient)}
+                      >
+                        View
+                      </Button>
+
+                      {selectedRole === "user" && (
+                        <>
+                          <Button
+                            variant="warning"
+                            size="sm"
+                            onClick={() => handleEdit(patient)}
+                            className="me-1"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleDelete(patient._id)}
+                          >
+                            Delete
+                          </Button>
+                        </>
+                      )}
+                    </td>
                   </td>
                 </tr>
               ))}
@@ -444,10 +529,20 @@ const PatientDataComponent = () => {
         </Modal.Header>
         <Modal.Body>
           {page === 1 && (
-            <AuditFormPage1 formData={formData} handleChange={handleChange} setFormData={setFormData} errors={errors} />
+            <AuditFormPage1
+              formData={formData}
+              handleChange={handleChange}
+              setFormData={setFormData}
+              errors={errors}
+            />
           )}
           {page === 2 && (
-            <AuditFormPage2 formData={formData} handleChange={handleChange} changedAfterCulture={formData.Antibiotic_change_afer_culture} errors={errors} />
+            <AuditFormPage2
+              formData={formData}
+              handleChange={handleChange}
+              changedAfterCulture={formData.Antibiotic_change_afer_culture}
+              errors={errors}
+            />
           )}
         </Modal.Body>
         <Modal.Footer>
@@ -464,12 +559,17 @@ const PatientDataComponent = () => {
               Next
             </Button>
           ) : (
-            <Button variant="success" onClick={handleSubmit} disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
+            <Button
+              variant="success"
+              onClick={editMode ? handleUpdate : handleSubmit}
+              disabled={loading}
+            >
+              {loading ? "Processing..." : editMode ? "Update" : "Submit"}
             </Button>
           )}
         </Modal.Footer>
       </Modal>
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 };

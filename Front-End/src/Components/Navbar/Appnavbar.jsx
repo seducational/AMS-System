@@ -16,12 +16,14 @@ import "./Navbar.css";
 import { useAuth } from "../../AuthContext";
 import axios from "axios";
 
+// ... same imports as before ...
+
 const AppNavbar = () => {
   const { isLoggedIn, selectedRole, activeTab, setActiveTab, handleLogout } = useAuth();
   const navigate = useNavigate();
-  const cotTabs = ["Patient Data", "Team Chat", "Notifications"];
+  const tabs = ["Patient Data", "Team Chat", "Notifications"];
   const [fullName, setFullName] = useState("");
-  const [hasNewNotification, setHasNewNotification] = useState(false); // 🔴
+  const [hasNewNotification, setHasNewNotification] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -38,25 +40,18 @@ const AppNavbar = () => {
         const fullName = `${firstName} ${middleInitial} ${lastName}`;
         setFullName(fullName.trim());
       } catch (error) {
-        console.error(
-          "Error fetching user:",
-          error.response?.data?.message || error.message
-        );
+        console.error("Error fetching user:", error.response?.data?.message || error.message);
       }
     };
 
-    if (isLoggedIn) {
-      fetchUserData();
-    }
+    if (isLoggedIn) fetchUserData();
   }, [isLoggedIn]);
 
-  // 🔄 Poll for new notifications every 10 seconds
   useEffect(() => {
     const checkNewNotifications = async () => {
       try {
         const res = await axios.get("http://localhost:8000/notify/getNotification");
         const data = res.data;
-
         const lastSeen = localStorage.getItem("lastSeenNotificationTime");
         const latestNotificationTime = data?.[0]?.createdAt;
 
@@ -71,7 +66,7 @@ const AppNavbar = () => {
       }
     };
 
-    if (isLoggedIn && selectedRole === "user") {
+    if (isLoggedIn && (selectedRole === "user" || selectedRole === "doctor")) {
       checkNewNotifications();
       const interval = setInterval(checkNewNotifications, 10000);
       return () => clearInterval(interval);
@@ -80,35 +75,24 @@ const AppNavbar = () => {
 
   return (
     <>
-      <Navbar
-        expand="lg"
-        className="bg-light shadow-sm"
-        style={{ height: "90px", position: "sticky", top: 0, zIndex: 1000 }}
-      >
+      <Navbar expand="lg" className="bg-light shadow-sm" style={{ height: "90px", position: "sticky", top: 0, zIndex: 1000 }}>
         <Container fluid>
-          <Navbar.Brand className="fs-2 fw-bold text-dark">
-            Antimicrobial Stewardship Hub
-          </Navbar.Brand>
+          <Navbar.Brand className="fs-2 fw-bold text-dark">Antimicrobial Stewardship Hub</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {isLoggedIn && selectedRole === "user" && (
+            {isLoggedIn && (selectedRole === "user" || selectedRole === "doctor") && (
               <Nav className="me-auto ms-4">
-                {cotTabs.map((tab) => (
+                {tabs.map((tab) => (
                   <Nav.Link
                     key={tab}
                     onClick={() => {
                       setActiveTab(tab);
-                      if (tab === "Patient Data") {
-                        navigate("/patientData");
-                      } else if (tab === "Team Chat") {
-                        navigate("/chatbox");
-                      } else if (tab === "Notifications") {
+                      if (tab === "Patient Data") navigate("/patientData");
+                      else if (tab === "Team Chat") navigate("/chatbox");
+                      else if (tab === "Notifications") {
                         navigate("/notification");
-                        localStorage.setItem(
-                          "lastSeenNotificationTime",
-                          new Date().toISOString()
-                        );
-                        setHasNewNotification(false); // 🧹 clear on click
+                        localStorage.setItem("lastSeenNotificationTime", new Date().toISOString());
+                        setHasNewNotification(false);
                       }
                     }}
                     className={`fw-semibold ${
@@ -140,15 +124,7 @@ const AppNavbar = () => {
 
             {!isLoggedIn && (
               <Nav className="d-flex w-75 justify-content-center">
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "pe-4 align-self-center fs-5 custom-active"
-                      : "pe-4 text-dark fs-5 align-self-center"
-                  }
-                  style={{ textDecoration: "none" }}
-                >
+                <NavLink to="/" className={({ isActive }) => isActive ? "pe-4 align-self-center fs-5 custom-active" : "pe-4 text-dark fs-5 align-self-center"} style={{ textDecoration: "none" }}>
                   Home
                 </NavLink>
                 <Nav.Link className="pe-4 fs-5">Help?</Nav.Link>
@@ -156,16 +132,15 @@ const AppNavbar = () => {
             )}
           </Navbar.Collapse>
 
-          {isLoggedIn && selectedRole === "user" ? (
+          {isLoggedIn ? (
             <Dropdown align="end" className="ms-2">
-              <Dropdown.Toggle
-                variant="light"
-                id="dropdown-basic"
-                className="d-flex align-items-center icon-rounded text-secondary border-0"
-              >
-                <span className="me-">
+              <Dropdown.Toggle variant="light" id="dropdown-basic" className="d-flex align-items-center icon-rounded text-secondary border-0">
+                <span>
                   <PersonCircle size={35} className="me-1" />
-                  <span className="fw-bold">Hello!</span> <span className="fw-normal">{fullName}</span>
+                  <span className="fw-bold">
+                    {selectedRole === "doctor" ? "Dr." : "Hello!"}
+                  </span>{" "}
+                  <span className="fw-normal">{fullName}</span>
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -181,20 +156,11 @@ const AppNavbar = () => {
             </Dropdown>
           ) : (
             <div className="d-flex align-items-center gap-2">
-              <Button
-                className="rounded-4"
-                variant="outline-primary"
-                onClick={() => navigate("/login")}
-              >
+              <Button className="rounded-4" variant="outline-primary" onClick={() => navigate("/login")}>
                 <IoLogInOutline className="me-2 fs-4" />
                 Log In
               </Button>
-              <NavLink
-                to="/Register"
-                className="btn btn-primary rounded-4"
-                role="button"
-                onClick={() => navigate("/register")}
-              >
+              <NavLink to="/Register" className="btn btn-primary rounded-4" role="button">
                 <IoLogInOutline className="me-2 fs-4" />
                 Register
               </NavLink>
@@ -208,3 +174,4 @@ const AppNavbar = () => {
 };
 
 export default AppNavbar;
+

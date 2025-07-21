@@ -27,7 +27,7 @@ const ComplianceStats = () => {
 
   return (
     <div className="compliance-container">
-      <h2>📋 Compliance Metrics</h2>
+      {/* <h2>📋 Compliance Metrics</h2> */}
 
       <div className="date-filters">
         <div className="form-group">

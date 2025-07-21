@@ -12,6 +12,7 @@ exports.addPatientData = async (req, res) => {
   }
 };
 
+// Get All Patient Data
 exports.getAllPatientData = async (req, res) => {
   try {
     const patients = await data.find().sort({ createdAt: -1 }); // latest first
@@ -22,6 +23,44 @@ exports.getAllPatientData = async (req, res) => {
   }
 };
 
+// DELETE patient by ID
+exports.deletePatientData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await data.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    res.json({ message: 'Patient data deleted successfully' });
+  } catch (error) {
+    console.error("Error deleting patient data:", error);
+    res.status(500).json({ message: "Failed to delete patient data" });
+  }
+};
+
+// UPDATE patient by ID
+exports.updatePatientData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await data.findByIdAndUpdate(id, req.body, {
+      new: true, // returns updated doc
+      runValidators: true, // ensure schema validation
+    });
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    res.json({ message: 'Patient data updated successfully', updated });
+  } catch (error) {
+    console.error("Error updating patient data:", error);
+    res.status(500).json({ message: "Failed to update patient data" });
+  }
+};
+
+// Get patient count
 exports.getPatientCount = async (req, res) => {
   try {
     const count = await data.countDocuments();

@@ -98,9 +98,9 @@ const Sidebar = () => {
               <Link to="/cotTeam" className="Sidebar-menu" onClick={closeSidebar}>
                 <FaGraduationCap className="me-2 text-danger" /> COT Team
               </Link>
-              <Link to="/head/getstate" className="Sidebar-menu" onClick={closeSidebar}>
+              {/* <Link to="/head/getstate" className="Sidebar-menu" onClick={closeSidebar}>
                 <MdLocationOn className="me-2 text-info" /> Admin
-              </Link>
+              </Link> */}
               {/* <Link to="/head/district" className="Sidebar-menu" onClick={closeSidebar}>
                 <FaMapPin className="me-2 text-warning" /> District
               </Link>
