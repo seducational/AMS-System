@@ -31,7 +31,7 @@ const ForgotPasswordForm = () => {
   const resetPassword = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/reset-password",
+        `${import.meta.env.VITE_BACKEND_URL}auth/reset-password",
         {
           email,
           otp,
