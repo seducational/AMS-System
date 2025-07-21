@@ -28,7 +28,7 @@ const Sidebar = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get("http://localhost:8000/auth/me", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/me`, {
           headers: {
             "x-auth-token": token,
           },
