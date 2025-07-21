@@ -21,7 +21,7 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/auth/me")
+      .get(`${import.meta.env.VITE_BACKEND_URL}auth/me`)
       .then((res) => {
         setVisitData(res.data);
         console.log("Admin Data : ", visitData);
@@ -35,7 +35,7 @@ const HeaderComponent = () => {
     const checkNotifications = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/notify/getNotification"
+          `${import.meta.env.VITE_BACKEND_URL}notify/getNotification`
         );
         const notifications = res.data;
 
