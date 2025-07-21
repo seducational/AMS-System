@@ -30,7 +30,7 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/auth/register', formData);
+      const response = await axios.post('${import.meta.env.VITE_BACKEND_URL}/auth/register', formData);
       console.log('Registration Success:', response.data);
       alert('Account request send to admin successfully!');
       navigate('/login');
