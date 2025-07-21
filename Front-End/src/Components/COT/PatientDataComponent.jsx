@@ -36,7 +36,7 @@ const PatientDataComponent = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const res = await fetch("${import.meta.env.VITE_BACKEND_URL}patient/getPatient"); // 🔁 Change this if different route
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}patient/getPatient`); // 🔁 Change this if different route
         const data = await res.json();
         setPatients(data.reverse()); // latest on top
       } catch (err) {
