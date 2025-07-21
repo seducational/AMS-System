@@ -7,7 +7,7 @@ export const Doctor = () => {
     const [user, setUser] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8000/auth/doctors")
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/doctors")
             .then((res) => setUser(res.data))
             .catch((err) => console.log("Api error : ", err));
     }, []);
@@ -29,7 +29,7 @@ export const Doctor = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:8000/auth/deleteMember/${id}`);
+                    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}auth/deleteMember/${id}`);
                     setUser(user.filter((u) => u._id !== id));
                     Swal.fire({
                         title: 'Deleted!',
