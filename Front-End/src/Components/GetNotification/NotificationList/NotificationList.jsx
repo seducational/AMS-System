@@ -10,7 +10,7 @@ const NotificationsList = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:8000/notify/getNotification');
+      const res = await fetch('${import.meta.env.VITE_BACKEND_URL}/notify/getNotification');
       const data = await res.json();
       setNotifications(data);
     } catch (err) {
