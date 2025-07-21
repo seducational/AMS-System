@@ -13,7 +13,7 @@ const PatientTable = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const res = await fetch("http://localhost:8000/patient/getPatient");
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}patient/getPatient`);
         const data = await res.json();
         setPatients(data.reverse());
       } catch (err) {
