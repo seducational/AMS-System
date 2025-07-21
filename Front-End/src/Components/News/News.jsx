@@ -33,13 +33,24 @@ const News = () => {
   const API_KEY = "62fd94c5302d48ca88bd6961b255a23c"; //API key for newsapi.org
 
   const getData = async () => {
+  try {
     const response = await fetch(
       `https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`
     );
     const jsonData = await response.json();
-    console.log(jsonData.articles);
-    setNewsData(jsonData.articles);
-  };
+
+    if (jsonData.status === "ok") {
+      setNewsData(jsonData.articles);
+    } else {
+      console.error("News API error:", jsonData);
+      setNewsData([]); // fallback empty data
+    }
+  } catch (error) {
+    console.error("Fetch failed:", error);
+    setNewsData([]);
+  }
+};
+
   const handleInput = (e) => {
     console.log(e.target.value);
     setSearch(e.target.value);
