@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
         if (error.response) {
           console.error("Login Error Response:", error.response); // Log the full error response
           alert(
-            `Msg: ${error.response.data.message || "Invalid credentials2"}`
+            `Msg: ${error.response.data.message || "Invalid credentials"}`
           ); // More specific error message
         } else {
           console.error("Login Error:", error.message);
