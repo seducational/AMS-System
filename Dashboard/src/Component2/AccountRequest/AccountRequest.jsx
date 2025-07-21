@@ -23,7 +23,7 @@ const AccountRequests = () => {
   const fetchPendingUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/auth/pending-requests");
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/pending-requests`);
       setPendingUsers(res.data);
       setLoading(false);
     } catch (error) {
@@ -45,7 +45,7 @@ const AccountRequests = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.put(`http://localhost:8000/auth/approve-user/${id}`);
+          await axios.put(`${import.meta.env.VITE_BACKEND_URL}auth/approve-user/${id}`);
           setMessage("User approved successfully!");
           fetchPendingUsers();
           Swal.fire('Approved!', 'The user has been approved.', 'success');
@@ -70,7 +70,7 @@ const AccountRequests = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:8000/auth/reject-user/${id}`);
+          await axios.delete(`${import.meta.env.VITE_BACKEND_URL}auth/reject-user/${id}`);
           setMessage("User rejected and deleted!");
           fetchPendingUsers();
           Swal.fire('Rejected!', 'The user has been deleted.', 'success');
