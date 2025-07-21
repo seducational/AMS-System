@@ -14,7 +14,7 @@ const ComplianceStats = () => {
 
   const fetchCompliance = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/patient/compliance-stats?from=${fromDate}&to=${toDate}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}patient/compliance-stats?from=${fromDate}&to=${toDate}`);
       setCompliance(res.data);
     } catch (err) {
       console.error('Error fetching compliance stats:', err);

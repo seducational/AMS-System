@@ -81,18 +81,16 @@ const Dashboard = () => {
   const [patientCount, setPatientCount] = useState(0);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/auth/dashboard-counts")
-      .then((res) => {
-        console.log("Dashboard Counts API response:", res.data); // Add this line
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/dashboard-counts`) 
+      .then(res => {
+        console.log("Dashboard Counts API response:", res.data);  // Add this line
         setCounts(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/patient/count")
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}patient/count`)
       .then((res) => {
         setPatientCount(res.data.totalPatients);
       })

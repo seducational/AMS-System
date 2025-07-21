@@ -8,7 +8,7 @@ export const CotTeam = () => {
     const [cotData, setcotData] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8000/auth/cotTeam")
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}auth/cotTeam`)
             .then((res) => setcotData(res.data))
             .catch((err) => console.log("Cot Api Error : ", err));
     }, []);
@@ -30,7 +30,7 @@ export const CotTeam = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:8000/auth/deleteMember/${id}`);
+                    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}auth/deleteMember/${id}`);
                     setcotData(cotData.filter((u) => u._id !== id));
                     Swal.fire({
                         title: 'Deleted!',

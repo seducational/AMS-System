@@ -15,7 +15,7 @@ const ForgotPasswordForm = () => {
   const sendOtp = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/auth/send-otp", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}auth/send-otp`, {
         email,
       });
       alert(response.data.message);
@@ -31,7 +31,7 @@ const ForgotPasswordForm = () => {
   const resetPassword = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/reset-password",
+        `${import.meta.env.VITE_BACKEND_URL}auth/reset-password`,
         {
           email,
           otp,

@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import "./Chatbox1.css";
 import axios from "axios";
 
-const socket = io("http://localhost:8000");
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`);
 
 function ChatBoxComponent() {
   const [username, setUsername] = useState(null);
@@ -18,7 +18,7 @@ function ChatBoxComponent() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await axios.get("http://localhost:8000/auth/me", {
+        const res = await axios.get("${import.meta.env.VITE_BACKEND_URL}auth/me", {
           headers: {
             "x-auth-token": token,
           },
@@ -45,7 +45,7 @@ function ChatBoxComponent() {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/get-messages?isGroup=true"
+          `${import.meta.env.VITE_BACKEND_URL}api/get-messages?isGroup=true`
         );
         const formatted = res.data.map((msg) => {
           const sender = msg.sender;
@@ -114,7 +114,7 @@ function ChatBoxComponent() {
     try {
       socket.emit("message", { user: username, text: message });
 
-      await axios.post("http://localhost:8000/api/send-message", {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/send-message`, {
         senderId: userId,
         content: message,
         isGroup: true,

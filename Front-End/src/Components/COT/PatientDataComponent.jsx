@@ -42,7 +42,7 @@ const PatientDataComponent = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const res = await fetch("http://localhost:8000/patient/getPatient"); // 🔁 Change this if different route
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}patient/getPatient`); // 🔁 Change this if different route
         const data = await res.json();
         setPatients(data.reverse()); // latest on top
       } catch (err) {
@@ -246,7 +246,7 @@ const PatientDataComponent = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/patient/add",
+        "${import.meta.env.VITE_BACKEND_URL}/patient/add",
         formData
       );
       alert("Form submitted successfully!");

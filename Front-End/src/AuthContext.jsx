@@ -8,7 +8,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  // Initial state from localStorage for persistence
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("authToken"));
   const [selectedRole, setSelectedRole] = useState(() => localStorage.getItem("role") || "admin");
   const [activeTab, setActiveTab] = useState("Patient Data");
@@ -35,29 +34,25 @@ export const AuthProvider = ({ children }) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/login", payload);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}auth/login`, payload);
+      console.log("Login Success:", response.data);
 
-      toast.success("Login Successful!");
-
-      const token = response.data.token;
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("role", selectedRole);
+      toast.success("Login Successful");
 
       setIsLoggedIn(true);
-      setSelectedRole(selectedRole);
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("role", selectedRole);
       setActiveTab("Patient Data");
 
-      // Navigate based on role
-      if (selectedRole === "user" || selectedRole === "doctor") {
+      if (selectedRole === "user") {
         navigate("/patientData");
-      } else {
-        navigate("/");
       }
-
     } catch (error) {
       if (error.response) {
-        alert(`Error: ${error.response.data.message || "Invalid credentials"}`);
+        console.error("Login Error Response:", error.response);
+        alert(`Msg: ${error.response.data.message || "Invalid credentials"}`);
       } else {
+        console.error("Login Error:", error.message);
         alert("An error occurred. Please try again later.");
       }
     }
@@ -70,6 +65,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("role");
     navigate("/");
     setSelectedRole("");
+    setemail("");
+    setPassword("");
   };
 
   // Restore login state on app mount
