@@ -11,7 +11,10 @@ const app = express();
 const server = http.createServer(app);
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'https://ams-system-sy.vercel.app',
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
